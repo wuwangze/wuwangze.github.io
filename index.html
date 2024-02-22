@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+    <title>WWZ-Translate</title>
+    <link rel="icon" type="image/png" href="https://tse4.mm.bing.net/th/id/OIG1.TMVfxrxHZbcSnbCWqVKD?w=270&h=270&c=6&r=0&o=5&pid=ImgGn"> <!-- 添加这行用于 favicon -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+      }
+      .topbar {
+        width: 100%;
+        min-width: 600px;
+        height: 60px;
+        background-color: #d02090; /* 紫罗兰红 */
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chatbox {
+        width: 100%; /* 与屏幕一样宽 */
+        height: 360px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 5px 1px #4682b4; /* 灰蓝色 */
+      }
+      .chat {
+        width: 100%; /* 与屏幕一样宽 */
+        height: 300px;
+        padding: 20px;
+        overflow: auto;
+      }
+      hr {
+        height: 1px;
+        border: none;
+        background-color: #00ced1; /* 天青蓝 */
+      }
+      .chatbox button {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        margin: 9px 9px 9px calc(100% - 49px);
+        background-color: #9370db; /* 薰衣草紫 */
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button svg {
+        margin: 10px;
+      }
+      .input-container {
+        width: 100%; /* 与屏幕一样宽 */
+        height: 160px;
+        margin: 20px auto;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 0 5px 1px #87ceeb; /* 天蓝色 */
+      }
+      .input-container textarea {
+        width: 100%;
+        height: 100px;
+        border-radius: 10px;
+        padding: 20px;
+        font-weight: 800;
+        outline: none;
+        border: none;
+        resize: none;
+      }
+      .lastbox {
+        width: 100%;
+        height: 56px;
+        display: flex;
+      }
+      .model-container {
+        position: relative;
+        margin: auto auto auto 9px;
+      }
+      select {
+        width: 200px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 10px;
+        border: 1px solid #006400; /* 深绿色 */
+        outline: none;
+        font-size: 14px;
+      }
+      select option {
+        padding: 8px;
+        line-height: 1.5;
+      }
+      .input-container button {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        margin: auto 9px auto auto;
+        background-color: #87ceeb; /* 天蓝色 */
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+    </style>
+
+
+    <div class="topbar">
+      <h1>WWZ-Translate</h1>
+    </div>
+    <div class="chatbox">
+      <div class="chat" id="chat-box"></div>
+      <hr />
+      <button onclick="clearConversation()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div class="input-container">
+      <textarea
+        type="text"
+        id="user-input"
+        placeholder="请在这里输入"
+      ></textarea>
+      <hr />
+      <div class="lastbox">
+        <div class="model-container">
+          <select id="model-selector" onchange="changeModel()">
+            <option value="gpt-4-0125-preview">WWZ-Translate</option>
+          </select>
+        </div>
+        <button onclick="sendMessage()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <script>
+      var conversation = [
+  { role: "system", content: "You are a professional linguist and translator proficient in both Chinese and English. Your task is to translate the content sent by the user into English or Chinese, depending on the situation.\n\nSituation One: If the user explicitly states which content needs translation, you only need to translate the specified text. For example, if the user sends the following request: 'Help me translate this sentence into English: 你好美' (Translate '你好美' into English), you should only translate '你好美.'\n\nSituation Two: If the user sends content without specific translation requests, and it is just a piece of text, you should translate the entire text into English or Chinese. For instance, if the user sends the text '你是这个世界上最美的女生' (You are the most beautiful girl in the world), you should translate this text into English. Note that when the user sends Chinese content, you translate it into English, and when the user sends English content, you translate it into Chinese.\n\nPlease remember to maintain this pattern consistently. Do not output any content unrelated to translation, refrain from engaging in conversation with the user, and avoid introducing yourself or providing assistance with other inquiries. Your sole responsibility is to translate." },
+];
+      var selectedModel = "gpt-4";
+      function sendMessage() {
+        var userInput = document.getElementById("user-input").value;
+        appendMessage("您", userInput);
+        setTimeout(function () {
+          typeWriter("AI正在思考中...", "bot"); // 显示“AI正在思考中...” 0.5秒延迟
+        }, 200);
+        conversation.push({
+          role: "user",
+          content: userInput,
+        });
+        var model = selectedModel;
+        var requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer nk-2311676378 ",
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: conversation,
+            stream: false,
+            temperature: 0.5,
+            max_tokens: 16000,
+          }),
+        };
+        fetch(
+          "https://chat.flssedu1.top/api/openai/v1/chat/completions",
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            var botResponse = data.choices[0].message.content;
+            setTimeout(function () {
+              typeWriter("AI：" + botResponse, "bot");
+              conversation.push({
+                role: "assistant",
+                content: botResponse,
+              });
+            }, 1500);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            appendErrorMessage("出现错误：" + error);
+          });
+        document.getElementById("user-input").value = "";
+      }
+      function typeWriter(text, sender) {
+    var chatBox = document.getElementById("chat-box");
+    var messageDiv = document.createElement("div");
+    messageDiv.className = sender;
+    var typingSpan = document.createElement("span");
+    typingSpan.className = "typing";
+    messageDiv.appendChild(typingSpan);
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    var index = 0;
+    var typingInterval = setInterval(function () {
+        typingSpan.innerHTML += text[index];
+        index++;
+        if (index === text.length) {
+            clearInterval(typingInterval);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }, 50); // 根据需要调整间隔
+}
+      function appendMessage(sender, message) {
+        var chatBox = document.getElementById("chat-box");
+        var messageDiv = document.createElement("div");
+        messageDiv.className = sender;
+        messageDiv.innerHTML = "<strong>" + sender + ":</strong> " + message;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+      function appendErrorMessage(message) {
+        var chatBox = document.getElementById("chat-box");
+        var errorDiv = document.createElement("div");
+        errorDiv.className = "error";
+        errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+        chatBox.appendChild(errorDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+      function changeModel() {
+        clearConversation();
+        selectedModel = document.getElementById("model-selector").value;
+      }
+      function clearConversation() {
+        conversation = [];
+        document.getElementById("chat-box").innerHTML = "";
+      }
+      document
+        .getElementById("user-input")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+          }
+        });
+    </script>
+  </body>
+</html>
