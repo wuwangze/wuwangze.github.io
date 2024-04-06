@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
-    <title>WWZ-PainTing</title>
+    <title>WWZ-PAINTING</title>
     <link rel="icon" type="image/png" href="https://tse4.mm.bing.net/th/id/OIG1.TMVfxrxHZbcSnbCWqVKD?w=270&h=270&c=6&r=0&o=5&pid=ImgGn"> <!-- 添加这行用于 favicon -->
     <style>
       * {
@@ -150,17 +150,10 @@
   <body>
     <script>
       var activationCode = prompt("请输入激活码：");
-      if (activationCode !== "wuwangze") {
+      if (activationCode !== "1") {
         alert("激活码错误，跳转到百度首页");
         window.location.href = "http://www.baidu.com";
       }
-      window.onload = function() {
-  var notification = confirm("该网站使用WWZ（Wu WangZe）自主优化AI绘画模型，绘画速度比Stable-Diffusion提高80%，绘画速度大幅提高，生成图片质量大幅提高，受服务端网络影响，AI生成的图片会通过URL的方式显示在屏幕上，客户端对图片URL进行加载需要一段时间，请耐心等待，也可将图片URL复制，在浏览器新标签页窗口打开。\n\n您已知晓吗？");
-  if (notification) {
-  } else {
-    return;
-  }
-};
     </script>
     <div class="topbar">
       <h1>WWZ-PAINTING</h1>
@@ -190,7 +183,7 @@
       <div class="lastbox">
         <div class="model-container">
           <select id="model-selector" onchange="changeModel()">
-            <option value="gpt-3.5-turbo">WWZ-Painting</option>
+            <option value="gpt-3.5-turbo">WWZ-PAINTING</option>
             
           </select>
         </div>
@@ -227,7 +220,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer sk-BCloUEjkYqpWXy2KBa91PgURYd0syyc46vB2ButzJxqRyIry",
+            Authorization: "Bearer sk-vTFHsGHrXDtcNE7vIkXyhtMr2L0VumzuvDLNEe4NL9y8XDTi",
           },
           body: JSON.stringify({
             model: model,
