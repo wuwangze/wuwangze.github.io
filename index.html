@@ -1,184 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>济宁市中考成绩查询平台</title>
+    <title>表白程序</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Helvetica, sans-serif;
-            background-color: #efeff4;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            margin: 0;
-        }
-        h1 {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 400px;
-        }
-        .input-group label {
-            flex: 0 0 150px;
-            margin-right: 10px;
-            text-align: right;
-        }
-        .input-group input {
-            flex: 1;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .results {
-            margin-top: 20px;
-            text-align: center;
-            width: 100%;
-            max-width: 800px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-        .button-container {
             display: flex;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-image: url('https://i.ibb.co/g3mvNMS/Designer.png');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+        }
+        #inputSection {
             margin-top: 20px;
         }
+        #userInput {
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #userInput:focus {
+            border-color: #007BFF;
+        }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 10px 15px;
+            font-size: 18px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
             cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #0056b3;
         }
-        .highlight {
-            color: orange;
-            font-size: 28px;
-            text-shadow: 0 0 20px gold;
-        }
-        .normal-text {
-            color: black;
-            font-size: 20px;
-        }
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            text-align: center;
-            font-size: 12px;
-            width: 100%;
-            color: #888;
+        #message {
+            display: none;
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
-    <script>
-        function validateInputs() {
-            // Clear previous errors
-            document.getElementById('studentIdError').textContent = '';
-            document.getElementById('phoneError').textContent = '';
-            
-            // Get input values
-            const studentId = document.getElementById('studentId').value;
-            const studentName = document.getElementById('studentName').value;
-            const phone = document.getElementById('phone').value;
-            
-            // Validate student ID
-            if (studentId.length !== 19) {
-                document.getElementById('studentIdError').textContent = '学籍号输入错误，必须为19位数字。';
-                return;
-            }
-            
-            // Validate phone number
-            if (phone.length !== 4) {
-                document.getElementById('phoneError').textContent = '手机号后四位输入错误，必须为4位数字。';
-                return;
-            }
-            
-            // Hide input fields
-            document.getElementById('inputSection').style.display = 'none';
-            
-            // Hide query button
-            document.getElementById('queryButton').style.display = 'none';
-            
-            // Display results
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <p class="normal-text">
-                    <span class="highlight">${studentName}</span>同学您好，
-                    您的学籍号为
-                    <span class="highlight">${studentId}</span>，
-                    您所查询的成绩如下：
-                </p>
-                <table>
-                    <tr>
-                        <th>科目</th>
-                        <th>成绩</th>
-                    </tr>
-                    <tr>
-                        <td>体育</td>
-                        <td>60</td>
-                    </tr>
-                    <tr>
-                        <td>实验</td>
-                        <td>10</td>
-                    </tr>
-                </table>
-            `;
-        }
-    </script>
 </head>
 <body>
-    <h1>济宁市2024年初中学业水平考试体育、实验操作成绩查询</h1>
     <div id="inputSection">
-        <div class="input-group">
-            <label for="studentId">学籍号输入框：</label>
-            <input type="text" id="studentId" maxlength="19">
-            <div id="studentIdError" class="error"></div>
-        </div>
-        <div class="input-group">
-            <label for="studentName">姓名输入框：</label>
-            <input type="text" id="studentName">
-        </div>
-        <div class="input-group">
-            <label for="phone">手机号后四位输入框：</label>
-            <input type="text" id="phone" maxlength="4">
-            <div id="phoneError" class="error"></div>
-        </div>
+        <input type="text" id="userInput" placeholder="请输入内容">
+        <button onclick="checkInput()">确定</button>
     </div>
-    <div class="button-container">
-        <button id="queryButton" onclick="validateInputs()">查询成绩</button>
-    </div>
-    <div id="results" class="results"></div>
-    <div class="footer">
-        <p>本中考成绩查询平台由吴旺泽提供技术支持<br>This junior high school exam results query platform is supported by Wu Wangze.<br>本平台所查成绩仅供娱乐，请勿当真，如需查询成绩，请访问：http://tysy.jinedu.cn</p>
-    </div>
+    <div id="message"></div>
+    <audio id="audio" src="https://m801.music.126.net/20240608142045/c0e460c2255a77aa3e69e4ecc6d6ac21/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096513378/e486/dda7/9d14/6477749cd702c0b9d0debadb75ced6dd.mp3"></audio>
+    <script>
+        function typeWriter(text, element, callback) {
+            let i = 0;
+            function typing() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, 100);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            typing();
+        }
+
+        function checkInput() {
+            const userInput = document.getElementById('userInput').value;
+            const messageElement = document.getElementById('message');
+            if (userInput.toLowerCase() === 'jhy') {
+                document.body.style.backgroundImage = 'url("https://i.ibb.co/KhHwTfq/Designer-1.png")';
+                document.getElementById('inputSection').style.display = 'none';
+                messageElement.style.display = 'block';
+                typeWriter('其实，我一直喜欢你', messageElement);
+                playAudioFrom(14);
+            }
+        }
+
+        function playAudioFrom(seconds) {
+            const audio = document.getElementById('audio');
+            audio.currentTime = seconds;
+            audio.play();
+        }
+    </script>
 </body>
 </html>
