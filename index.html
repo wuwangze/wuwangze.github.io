@@ -1,99 +1,235 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I love You</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            background-image: url('https://i.ibb.co/g3mvNMS/Designer.png');
-            background-size: cover;
-            background-position: center;
-            font-family: Arial, sans-serif;
-        }
-        #inputSection {
-            margin-top: 20px;
-        }
-        #userInput {
-            padding: 10px;
-            font-size: 18px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        #userInput:focus {
-            border-color: #007BFF;
-        }
-        button {
-            padding: 10px 15px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #message {
-            display: none;
-            font-size: 24px;
-            color: #333;
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with AI</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: #f4f4f9;
+    }
+    #header {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 800px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #chat-box {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .user {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .bot {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .message {
+      display: inline-block;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 60%;
+      word-break: break-word;
+    }
+    .bot .message {
+      background-color: #E8E8E8;
+    }
+    .user .message {
+      background-color: #DCF8C6;
+    }
+    #input-container {
+      display: flex;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      align-items: center;
+    }
+    #user-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #delete-btn {
+      background-color: red;
+      color: white;
+    }
+    #delete-btn:hover {
+      background-color: darkred;
+    }
+    #model-selector {
+      margin-left: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div id="inputSection">
-        <input type="text" id="userInput" placeholder="请输入内容">
-        <button onclick="checkInput()">确定</button>
+  <div id="header">WWZ-AI</div>
+  <div id="chat-container">
+    <div id="chat-box"></div>
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Type a message">
+      <button onclick="sendMessage()">Send</button>
+      <button id="delete-btn" onclick="deleteMessages()">Delete</button>
+      <div id="model-selector">
+        <select id="model-options" onchange="changeModel()">
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+          <option value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</option>
+          <option value="stable-diffusion">stable-diffusion</option>
+        </select>
+      </div>
     </div>
-    <div id="message"></div>
-    <audio id="audio" src="https://m801.music.126.net/20240608142045/c0e460c2255a77aa3e69e4ecc6d6ac21/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096513378/e486/dda7/9d14/6477749cd702c0b9d0debadb75ced6dd.mp3"></audio>
-    <script>
-        function typeWriter(text, element, callback) {
-            let i = 0;
-            function typing() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(typing, 100);
-                } else if (callback) {
-                    callback();
+  </div>
+  <script>
+    var conversation = [];
+    var selectedModel = "gpt-3.5-turbo";
+    var sequence = 1;
+    function sendMessage() {
+      var userInput = document.getElementById("user-input").value.trim();
+      if (userInput === '') return;
+      appendMessage("You", userInput);
+      conversation.push({
+        role: "user",
+        content: userInput,
+        sequence: sequence,
+      });
+      sequence++; 
+      var requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer sk-hKD4TbJJBslmD99GoqD6S3qn18gjd6DvFQoEX3qpWLcFd3YS",  
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: conversation,
+          stream: true,
+          temperature: 0.5,
+          max_tokens: 4000,
+        }),
+      };    
+      fetch("https://api.gptgod.online/v1/chat/completions", requestOptions)
+        .then(response => {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botResponse = '';
+          appendMessage("AI", ""); 
+          function read() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                conversation.push({
+                  role: "assistant",
+                  content: botResponse,
+                });
+                return;
+              }
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
+              for (let line of lines) {
+                if (line.trim().startsWith('data: ')) {
+                  const json = JSON.parse(line.slice(6));
+                  if (json.choices && json.choices.length > 0 && json.choices[0].delta && json.choices[0].delta.content) {
+                    botResponse += json.choices[0].delta.content;
+                    updateLatestMessage(botResponse);
+                  }
                 }
-            }
-            typing();
-        }
-
-        function checkInput() {
-            const userInput = document.getElementById('userInput').value;
-            const messageElement = document.getElementById('message');
-            if (userInput.toLowerCase() === 'jhy') {
-                document.body.style.backgroundImage = 'url("https://i.ibb.co/KhHwTfq/Designer-1.png")';
-                document.getElementById('inputSection').style.display = 'none';
-                messageElement.style.display = 'block';
-                typeWriter('其实，我一直喜欢你', messageElement);
-                playAudioFrom(14);
-            }
-        }
-
-        function playAudioFrom(seconds) {
-            const audio = document.getElementById('audio');
-            audio.currentTime = seconds;
-            audio.play();
-        }
-    </script>
+              }
+              read();
+            });
+          }
+          read();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          appendErrorMessage("Error: " + error);
+        });
+      document.getElementById("user-input").value = "";
+    }
+    function updateLatestMessage(text) {
+      var chatBox = document.getElementById("chat-box");
+      var latestMessage = chatBox.querySelector(".bot:last-child .message");
+      if (latestMessage) {
+        latestMessage.textContent = text;
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function appendMessage(sender, message) {
+      var chatBox = document.getElementById("chat-box");
+      var messageDiv = document.createElement("div");
+      messageDiv.className = sender === "You" ? "user" : "bot";
+      var messageContent = `<div class="message">${message}</div>`;
+      messageDiv.innerHTML = messageContent;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function appendErrorMessage(message) {
+      var chatBox = document.getElementById("chat-box");
+      var errorDiv = document.createElement("div");
+      errorDiv.className = "error";
+      errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+      chatBox.appendChild(errorDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function deleteMessages() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = '';
+      conversation = [];
+      sequence = 1;
+    }
+    function changeModel() {
+      selectedModel = document.getElementById('model-options').value;
+    }
+    document.getElementById("user-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
 </body>
 </html>
