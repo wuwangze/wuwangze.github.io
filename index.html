@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,8 +191,13 @@
       <div id="model-selector">
         <label for="model-options">Model:</label>
         <select id="model-options" onchange="changeModel()">
-          <option value="glm-4-flash">glm-4-flash</option>
-          <option value="net-glm-4-flash">（联网版）glm-4-flash</option>
+          <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
+          <option value="gpt-4-0125-preview">gpt-4-0125-preview</option>
+          <option value="gpt-4-32k-0613">gpt-4-32k-0613</option>
+          <option value="gpt-4-turbo-2024-04-09">gpt-4-turbo-2024-04-09</option>
+          <option value="gpt-4o-2024-05-13">gpt-4o-2024-05-13</option>
+          <option value="gpt-4o-mini-2024-07-18">gpt-4o-mini-2024-07-18</option>
+          <option value="gemini-1.5-pro">gemini-1.5-pro</option>
         </select>
       </div>
     </div>
@@ -211,7 +214,7 @@
 
   <script>
     var conversation = [];
-    var selectedModel = "glm-4-flash";
+    var selectedModel = "gpt-3.5-turbo-0125";
     var sequence = 1;
 
     function sendMessage() {
@@ -228,17 +231,17 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer sk-Z6ypjwFE0NVxQJ7f6fwdEtbqal2w5mqxlndLBUhIMjtO3FfC",  
+          Authorization: "Bearer sk-IhdUz2PzFtyIxDE677212f15A61748A8Be3c4a02B95eBaAe",  
         },
         body: JSON.stringify({
           model: selectedModel,
           messages: conversation,
           stream: true,
           temperature: 0.5,
-          max_tokens: 4000,
+          max_tokens: 160000,
         }),
       };    
-      fetch("https://api.gptgod.online/v1/chat/completions", requestOptions)
+      fetch("https://api.swt-ai.com/v1/chat/completions", requestOptions)
         .then(response => {
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
