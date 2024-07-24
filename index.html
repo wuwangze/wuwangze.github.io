@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WUWANGZE-MAP</title>
+    <title>综合 Leaflet 地图示例</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
     <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
         #map {
-            height: 600px; 
+            height: 100%; /* Ensure the map takes up the full height */
+            width: 100%; /* Ensure the map takes up the full width */
         }
         .modal {
             display: block; 
@@ -145,7 +151,7 @@
         }).addTo(map);
         document.getElementById('closeBtn').onclick = function() {
             document.getElementById('myModal').style.display = 'none';
-            document.getElementById('myModal2').style.display = 'flex'; 
+            document.getElementById('myModal2').style.display = 'flex'; // 使用 flex 确保相同位置
         };
         document.getElementById('closeBtn2').onclick = function() {
             document.getElementById('myModal2').style.display = 'none';
