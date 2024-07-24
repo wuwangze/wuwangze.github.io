@@ -111,12 +111,6 @@
         L.control.zoom({
             position: 'topright'
         }).addTo(map);
-        map.on('click', function(e) {
-            alert("你点击了地图在 " + e.latlng);
-        });
-        map.on('mousemove', function(e) {
-            console.log("鼠标移动到 " + e.latlng);
-        });
         var geojsonFeature = {
             "type": "Feature",
             "properties": {
