@@ -1,161 +1,365 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>WUWANGZE-MAP</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
-    <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        #map {
-            height: 100%; /* Ensure the map takes up the full height */
-            width: 100%; /* Ensure the map takes up the full width */
-        }
-        .modal {
-            display: block; 
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-        }
-        .modal-content h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .modal-content button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .modal-content button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWZ-AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: #f4f4f9;
+    }
+    #header {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 98%;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    #chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #f1f1f1;
+    }
+    .user, .bot {
+      display: flex;
+      align-items: flex-end;
+    }
+    .user {
+      justify-content: flex-end;
+    }
+    .bot {
+      justify-content: flex-start;
+    }
+    .message {
+      display: inline-block;
+      padding: 15px;
+      border-radius: 15px;
+      max-width: 60%;
+      word-break: break-word;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .bot .message {
+      background-color: #e0e0e0;
+      border-bottom-left-radius: 0;
+    }
+    .user .message {
+      background-color: #4CAF50;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    .error .message {
+      background-color: #ffebee;
+    }
+    .error .error {
+      background-color: #ffcdd2;
+    }
+    .error .error-message {
+      color: #b71c1c;
+    }
+    .error .error strong {
+      font-size: 18px;
+    }
+    #input-container {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid #ccc;
+      padding: 15px;
+      background-color: #fff;
+      align-items: center;
+    }
+    #user-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .button-group {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+    button {
+      padding: 15px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex: 1;
+      margin: 0 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #delete-btn {
+      background-color: red;
+      color: white;
+    }
+    #delete-btn:hover {
+      background-color: darkred;
+    }
+    #model-selector {
+      display: flex;
+      align-items: center;
+    }
+    #model-options {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1;
+      margin: 0 5px;
+    }
+    #welcome-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #welcome-message {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      max-width: 80%;
+    }
+    #welcome-message button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #welcome-message button:hover {
+      background-color: #45a049;
+    }
+    @media (min-width: 600px) {
+      #input-container {
+        flex-direction: row;
+        align-items: center;
+      }
+      #user-input {
+        flex: 1;
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+      .button-group {
+        flex-direction: row;
+        width: auto;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <h1>干翻高德地图 手撕百度地图 WWZ地图全球最强</h1>
-            <button id="closeBtn">我赞同</button>
+  <div id="header">WUWANGZE-AI</div>
+  <div id="chat-container">
+    <div id="chat-box"></div>
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Type a message">
+      <div class="button-group">
+        <button onclick="sendMessage()">Send</button>
+        <button id="delete-btn" onclick="deleteMessages()">Delete</button>
+        <div id="model-selector">
+          <select id="model-options" onchange="changeModel()">
+            <option value="doubao">doubao</option>
+            <option value="glm-4">glm-4</option>
+            <option value="google-palm">google-palm</option>
+            <option value="hailuo">hailuo</option>
+            <option value="kimi">kimi</option>
+            <option value="minimax">minimax</option>
+            <option value="yi-medium-200k">yi-medium-200k</option>
+            <option value="llama-3.1-70b">llama-3.1-70b</option>
+            <option value="llama-3.1-8b">llama-3.1-8b</option>
+            <option value="step-1-256k">step-1-256k</option>
+            <option value="stable-diffusion">stable-diffusion</option>
+            <option value="SparkDeskV4">SparkDeskV4</option>
+            <option value="moonshot-v1-128k">moonshot-v1-128k</option>
+          </select>
         </div>
+      </div>
     </div>
-    <div id="myModal2" class="modal" style="display:none;">
-        <div class="modal-content">
-            <h1>受网络因素影响，地图有时加载较为缓慢，请见谅，缩放屏幕可快速查看地图瓦片图，并且，建议使用卫星图，加载更迅速</h1>
-            <button id="closeBtn2">我知道了</button>
-        </div>
+  </div>
+
+  <div id="welcome-modal">
+    <div id="welcome-message">
+      <p>该网站为AI问答网站，可以向AI提问，AI会耐心进行解答，可以和AI聊天</p>
+      <p>欢迎进入官方QQ交流群：715434216<br>您的进群便是对我最大的支持</p>
+      <p>PS：如遇到长时间不回复，请重试</p>
+      <button onclick="closeModal()">确认</button>
     </div>
+  </div>
 
-    <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
-        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 贡献者'
-        }).addTo(map);
+  <script>
+    var conversation = [];
+    var selectedModel = "gpt-3.5-turbo-0125";
+    var sequence = 1;
 
-        var satelliteLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> 贡献者'
+    function sendMessage() {
+      var userInput = document.getElementById("user-input").value.trim();
+      if (userInput === '') return;
+      appendMessage("You", userInput);
+      conversation.push({
+        role: "user",
+        content: userInput,
+        sequence: sequence,
+      });
+      sequence++;
+      var requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer sk-IhdUz2PzFtyIxDE677212f15A61748A8Be3c4a02B95eBaAe",  
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: conversation,
+          stream: true,
+          temperature: 0.5,
+          max_tokens: 160000,
+        }),
+      };    
+      fetch("https://api.swt-ai.com/v1/chat/completions", requestOptions)
+        .then(response => {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botResponse = '';
+          appendMessage("AI", ""); 
+          function read() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                conversation.push({
+                  role: "assistant",
+                  content: botResponse,
+                });
+                return;
+              }
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
+              for (let line of lines) {
+                if (line.trim().startsWith('data: ')) {
+                  const json = JSON.parse(line.slice(6));
+                  if (json.choices && json.choices.length > 0 && json.choices[0].delta && json.choices[0].delta.content) {
+                    botResponse += json.choices[0].delta.content;
+                    updateLatestMessage(botResponse);
+                  }
+                }
+              }
+              read();
+            });
+          }
+          read();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          appendErrorMessage("Error: " + error);
         });
-        var baseMaps = {
-            "OpenStreetMap": osmLayer,
-            "卫星图": satelliteLayer
-        };
-        L.control.layers(baseMaps).addTo(map);
-        var marker = L.marker([51.5, -0.09]).addTo(map)
-            .bindPopup('一个漂亮的 CSS.<br> biubiu.')
-            .openPopup();
-        var circle = L.circle([51.508, -0.11], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500
-        }).addTo(map)
-            .bindPopup('我是一个圆形.');
-        var polygon = L.polygon([
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
-        ]).addTo(map)
-            .bindPopup('我是一个多边形.');
-        var rectangle = L.rectangle([[51.49, -0.1], [51.5, -0.05]], {color: "blue", weight: 1})
-            .addTo(map)
-            .bindPopup('我是一个矩形.');
-        var polyline = L.polyline([
-            [51.506, -0.08],
-            [51.502, -0.06],
-            [51.507, -0.047]
-        ]).addTo(map)
-            .bindPopup('我是一个折线.');
-        L.control.scale().addTo(map);
-        L.control.zoom({
-            position: 'topright'
-        }).addTo(map);
-        var geojsonFeature = {
-            "type": "Feature",
-            "properties": {
-                "name": "库尔斯球场",
-                "amenity": "棒球场",
-                "popupContent": "这里是洛矶队比赛的地方！"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-104.99404, 39.75621]
-            }
-        };
+      document.getElementById("user-input").value = "";
+    }
 
-        L.geoJSON(geojsonFeature).addTo(map);
-        var customIcon = L.icon({
-            iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
-            shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-            iconSize: [38, 95],
-            shadowSize: [50, 64],
-            iconAnchor: [22, 94],
-            shadowAnchor: [4, 62],
-            popupAnchor: [-3, -76]
-        });
+    function updateLatestMessage(text) {
+      var chatBox = document.getElementById("chat-box");
+      var latestMessage = chatBox.querySelector(".bot:last-child .message");
+      if (latestMessage) {
+        latestMessage.innerHTML = marked.parse(text);
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        L.marker([51.5, -0.09], {icon: customIcon}).addTo(map)
-            .bindPopup('我是一个自定义图标.');
-        L.control.locate({
-            position: 'topright',
-            strings: {
-                title: "显示我的位置"
-            }
-        }).addTo(map);
-        document.getElementById('closeBtn').onclick = function() {
-            document.getElementById('myModal').style.display = 'none';
-            document.getElementById('myModal2').style.display = 'flex'; // 使用 flex 确保相同位置
-        };
-        document.getElementById('closeBtn2').onclick = function() {
-            document.getElementById('myModal2').style.display = 'none';
-        };
-    </script>
+    function appendMessage(sender, message) {
+      var chatBox = document.getElementById("chat-box");
+      var messageDiv = document.createElement("div");
+      messageDiv.className = sender === "You" ? "user" : "bot";
+      var messageContent = `<div class="message">${sender === "You" ? message : marked.parse(message)}</div>`;
+      messageDiv.innerHTML = messageContent;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendErrorMessage(message) {
+      var chatBox = document.getElementById("chat-box");
+      var errorDiv = document.createElement("div");
+      errorDiv.className = "error";
+      errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+      chatBox.appendChild(errorDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function deleteMessages() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = '';
+      conversation = [];
+      sequence = 1;
+    }
+
+    function changeModel() {
+      selectedModel = document.getElementById('model-options').value;
+    }
+
+    function closeModal() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'none';
+    }
+
+    document.getElementById("user-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    window.onload = function() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'flex';
+    };
+  </script>
 </body>
 </html>
