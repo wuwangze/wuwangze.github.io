@@ -1,300 +1,418 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WUWANGZE-ShortVideo</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: black;
-        }
-        #video-container {
-            width: 100%;
-            height: 100%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease-in-out;
-        }
-        #welcome-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            color: white;
-            font-size: 24px;
-            text-align: center;
-            padding: 20px;
-        }
-        #welcome-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #share-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .share-button {
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #qq-share {
-            background-color: #25D366;
-        }
-        #wechat-share {
-            background-color: #1AAD19;
-        }
-        #loading-message {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 20px;
-            display: none;
-        }
-        @media (max-width: 768px) and (orientation: portrait) {
-            #share-buttons {
-                justify-content: space-between;
-                padding: 0 20px;
-                bottom: 20px;
-                right: 20px;
-                left: unset;
-                transform: unset;
-                width: auto;
-            }
-            .share-button {
-                padding: 5px 10px;
-                font-size: 14px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWZ-AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: #f4f4f9;
+    }
+    #header {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 98%;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    #chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #f1f1f1;
+    }
+    .user, .bot {
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+    }
+    .user {
+      justify-content: flex-end;
+    }
+    .bot {
+      justify-content: flex-start;
+    }
+    .message {
+      display: inline-block;
+      padding: 15px;
+      border-radius: 15px;
+      max-width: 60%;
+      word-break: break-word;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .bot .message {
+      background-color: #e0e0e0;
+      border-bottom-left-radius: 0;
+    }
+    .user .message {
+      background-color: #4CAF50;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+    .preview-button, .cancel-preview-button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .preview-button:hover, .cancel-preview-button:hover {
+      background-color: #45a049;
+    }
+    .cancel-preview-button {
+      background-color: red;
+      margin-left: 10px;
+    }
+    .cancel-preview-button:hover {
+      background-color: darkred;
+    }
+    .preview-window {
+      margin-top: 10px;
+      width: 100%;
+      height: 500px; /* Increased height for better visibility */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: auto;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    .preview-window iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #input-container {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid #ccc;
+      padding: 15px;
+      background-color: #fff;
+      align-items: center;
+    }
+    #user-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .button-group {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+    button {
+      padding: 15px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex: 1;
+      margin: 0 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #delete-btn {
+      background-color: red;
+      color: white;
+    }
+    #delete-btn:hover {
+      background-color: darkred;
+    }
+    #model-selector {
+      display: flex;
+      align-items: center;
+    }
+    #model-options {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1;
+      margin: 0 5px;
+    }
+    #welcome-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #welcome-message {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      max-width: 80%;
+    }
+    #welcome-message button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #welcome-message button:hover {
+      background-color: #45a049;
+    }
+    @media (min-width: 600px) {
+      #input-container {
+        flex-direction: row;
+        align-items: center;
+      }
+      #user-input {
+        flex: 1;
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+      .button-group {
+        flex-direction: row;
+        width: auto;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="welcome-screen">
-        <p>欢迎各位美女帅哥来我的小站刷视频，本站主打一个学习分享，祝大家学习愉快 biu！</p>
-        <p>PS：因请求策略及网络原因，加载前两个视频需要部分时间，请耐心等待。</p>
-        <button id="welcome-button">我会好好学习的</button>
-    </div>
-    <div id="video-container">
-        <video id="videoPlayer" controls autoplay loop></video>
-        <div id="share-buttons">
-            <button id="qq-share" class="share-button">分享给QQ好友</button>
-            <button id="wechat-share" class="share-button">分享到微信</button>
+  <div id="header">WUWANGZE-AI</div>
+  <div id="chat-container">
+    <div id="chat-box"></div>
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Type a message">
+      <div class="button-group">
+        <button onclick="sendMessage()">Send</button>
+        <button id="delete-btn" onclick="deleteMessages()">Delete</button>
+        <div id="model-selector">
+          <select id="model-options" onchange="changeModel()">
+            <option value="gpt-4o-mini-2024-07-18">gpt-4o-mini-2024-07-18</option>
+          </select>
         </div>
-        <div id="loading-message">视频正在加载中...</div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const apiUrl = 'https://api.kuleu.com/api/xjj?type=json';
-        const videoPlayer = document.getElementById('videoPlayer');
-        const videoContainer = document.getElementById('video-container');
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const welcomeButton = document.getElementById('welcome-button');
-        const shareButtons = document.getElementById('share-buttons');
-        const loadingMessage = document.getElementById('loading-message');
-        const qqShareButton = document.getElementById('qq-share');
-        const wechatShareButton = document.getElementById('wechat-share');
-        let videoQueue = [];
-        let currentVideoIndex = 0;
-        let isLoading = false;
+  <div id="welcome-modal">
+    <div id="welcome-message">
+      <p>该网站为AI问答网站，可以向AI提问，AI会耐心进行解答，可以和AI聊天</p>
+      <p>欢迎进入官方QQ交流群：715434216<br>您的进群便是对我最大的支持</p>
+      <p>支持HTML代码在线预览</p>
+      <p>PS：如遇到长时间不回复，请重试</p>
+      <button onclick="closeModal()">确认</button>
+    </div>
+  </div>
 
-        welcomeButton.addEventListener('click', () => {
-            welcomeScreen.style.display = 'none';
-            videoContainer.style.display = 'flex';
-            loadInitialVideos();
-        });
+  <script>
+    var conversation = [];
+    var selectedModel = "gpt-4o-mini-2024-07-18";
+    var sequence = 1;
 
-        async function loadInitialVideos() {
-            await preloadVideos(2);
-            if (videoQueue.length > 0) {
-                videoPlayer.src = videoQueue[currentVideoIndex];
-                videoPlayer.style.transform = 'translateY(0)';
-                videoPlayer.play();
-            }
-        }
-
-        async function fetchVideoUrl() {
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                if (data && data.video) {
-                    return data.video;
-                }
-            } catch (error) {
-                console.error('获取视频失败：', error);
-            }
-            return null;
-        }
-
-        async function preloadVideos(count) {
-            if (isLoading) return;
-            isLoading = true;
-            const newVideos = [];
-            for (let i = 0; i < count; i++) {
-                const videoUrl = await fetchVideoUrl();
-                if (videoUrl) {
-                    newVideos.push(videoUrl);
-                }
-            }
-            videoQueue = videoQueue.concat(newVideos);
-            if (videoQueue.length > 40) {
-                videoQueue = videoQueue.slice(-10);
-                currentVideoIndex -= 30;
-            }
-            isLoading = false;
-        }
-
-        function switchVideo(direction) {
-            if (direction === 'down' && currentVideoIndex < videoQueue.length - 1) {
-                currentVideoIndex++;
-                if (!isLoading && videoQueue.length <= currentVideoIndex + 1) {
-                    loadingMessage.style.display = 'block';
-                    preloadVideos(10).then(() => {
-                        loadingMessage.style.display = 'none';
-                        videoPlayer.style.transform = 'translateY(-100%)';
-                        setTimeout(() => {
-                            videoPlayer.src = videoQueue[currentVideoIndex];
-                            videoPlayer.style.transform = 'translateY(0)';
-                            videoPlayer.play();
-                        }, 300);
-                    });
-                } else {
-                    videoPlayer.style.transform = 'translateY(-100%)';
-                    setTimeout(() => {
-                        videoPlayer.src = videoQueue[currentVideoIndex];
-                        videoPlayer.style.transform = 'translateY(0)';
-                        videoPlayer.play();
-                    }, 300);
-                }
-                if (currentVideoIndex === 4) {
-                    videoQueue = videoQueue.slice(3);
-                    currentVideoIndex -= 3;
-                    preloadVideos(10);
-                }
-            } else if (direction === 'up' && currentVideoIndex > 0) {
-                currentVideoIndex--;
-                videoPlayer.style.transform = 'translateY(100%)';
-                setTimeout(() => {
-                    videoPlayer.src = videoQueue[currentVideoIndex];
-                    videoPlayer.style.transform = 'translateY(0)';
-                    videoPlayer.play();
-                }, 300);
-            }
-        }
-
-        document.addEventListener('touchstart', handleTouchStart, false);
-        document.addEventListener('touchmove', handleTouchMove, false);
-
-        let xDown = null;
-        let yDown = null;
-
-        function handleTouchStart(evt) {
-            const firstTouch = evt.touches[0];
-            xDown = firstTouch.clientX;
-            yDown = firstTouch.clientY;
-        }
-
-        function handleTouchMove(evt) {
-            if (!xDown || !yDown) {
+    function sendMessage() {
+      var userInput = document.getElementById("user-input").value.trim();
+      if (userInput === '') return;
+      appendMessage("You", userInput);
+      conversation.push({
+        role: "user",
+        content: userInput,
+        sequence: sequence,
+      });
+      sequence++;
+      var requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer sk-Dms2xgcZwfnD1Pa4095101B335Bb4266835006BeBbA2Fa3b",  
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: conversation,
+          stream: true,
+          temperature: 0.5,
+          max_tokens: 160000,
+        }),
+      };    
+      fetch("https://api.freegpt.art/v1/chat/completions", requestOptions)
+        .then(response => {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botResponse = '';
+          appendMessage("AI", ""); 
+          function read() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                conversation.push({
+                  role: "assistant",
+                  content: botResponse,
+                });
                 return;
-            }
-
-            let xUp = evt.touches[0].clientX;
-            let yUp = evt.touches[0].clientY;
-
-            let xDiff = xDown - xUp;
-            let yDiff = yDown - yUp;
-
-            if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            } else {
-                if (yDiff > 0) {
-                    switchVideo('down');
-                } else {
-                    switchVideo('up');
+              }
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
+              for (let line of lines) {
+                if (line.trim().startsWith('data: ')) {
+                  const json = JSON.parse(line.slice(6));
+                  if (json.choices && json.choices.length > 0 && json.choices[0].delta && json.choices[0].delta.content) {
+                    botResponse += json.choices[0].delta.content;
+                    updateLatestMessage(botResponse);
+                  }
                 }
-            }
-
-            xDown = null;
-            yDown = null;
-        }
-
-        document.addEventListener('wheel', handleWheel, false);
-
-        function handleWheel(evt) {
-            if (evt.deltaY > 0) {
-                switchVideo('down');
-            } else {
-                switchVideo('up');
-            }
-        }
-
-        qqShareButton.addEventListener('click', () => {
-            const videoUrl = videoQueue[currentVideoIndex];
-            const qqUrl = `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(videoUrl)}&desc=分享视频`;
-            window.open(qqUrl, '_blank');
+              }
+              read();
+            });
+          }
+          read();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          appendErrorMessage("Error: " + error);
         });
+      document.getElementById("user-input").value = "";
+    }
 
-        wechatShareButton.addEventListener('click', () => {
-            const videoUrl = videoQueue[currentVideoIndex];
-            const wechatUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(videoUrl)}`;
-            window.open(wechatUrl, '_blank');
-        });
+    function updateLatestMessage(text) {
+      var chatBox = document.getElementById("chat-box");
+      var latestMessage = chatBox.querySelector(".bot:last-child .message");
+      if (latestMessage) {
+        latestMessage.innerHTML = marked.parse(text);
+        addPreviewButton(latestMessage, text);
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        videoPlayer.addEventListener('ended', () => {
-            videoPlayer.play();
-        });
+    function appendMessage(sender, message) {
+      var chatBox = document.getElementById("chat-box");
+      var messageDiv = document.createElement("div");
+      messageDiv.className = sender === "You" ? "user" : "bot";
+      var messageContent = `<div class="message">${sender === "You" ? message : marked.parse(message)}</div>`;
+      messageDiv.innerHTML = messageContent;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        function adjustShareButtons() {
-            if (window.innerWidth > 768 || (window.innerHeight < window.innerWidth)) {
-                shareButtons.style.justifyContent = 'flex-end';
-                shareButtons.style.left = 'unset';
-                shareButtons.style.right = '20px';
-                shareButtons.style.bottom = '20px';
-                shareButtons.style.transform = 'unset';
-                shareButtons.style.width = 'auto';
-            } else {
-                shareButtons.style.justifyContent = 'space-between';
-                shareButtons.style.left = '50%';
-                shareButtons.style.transform = 'translateX(-50%)';
-                shareButtons.style.width = '100%';
-            }
-        }
+    function addPreviewButton(messageElement, text) {
+      var previewButton = document.createElement("button");
+      previewButton.className = "preview-button";
+      previewButton.innerText = "Preview";
+      previewButton.onclick = function() {
+        openPreviewWindow(messageElement, text);
+      };
+      messageElement.appendChild(previewButton);
 
-        adjustShareButtons();
-        window.addEventListener('resize', adjustShareButtons);
-    </script>
+      var cancelPreviewButton = document.createElement("button");
+      cancelPreviewButton.className = "cancel-preview-button";
+      cancelPreviewButton.innerText = "Cancel Preview";
+      cancelPreviewButton.onclick = function() {
+        closePreviewWindow(messageElement);
+      };
+      messageElement.appendChild(cancelPreviewButton);
+    }
+
+    function openPreviewWindow(messageElement, text) {
+      var previewWindow = document.createElement("div");
+      previewWindow.className = "preview-window";
+      
+      // 只提取代码块部分
+      var codeBlockMatch = text.match(/```html\s*([\s\S]*?)\s*```/);
+      var codeContent = codeBlockMatch ? codeBlockMatch[1] : '';
+      
+      // Ensure text is properly escaped
+      var escapedText = codeContent.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      
+      // Create iframe and set srcdoc property
+      previewWindow.innerHTML = `<iframe srcdoc="${escapedText}"></iframe>`;
+      messageElement.appendChild(previewWindow);
+    }
+
+    function closePreviewWindow(messageElement) {
+      var previewWindow = messageElement.querySelector(".preview-window");
+      if (previewWindow) {
+        messageElement.removeChild(previewWindow);
+      }
+    }
+
+    function appendErrorMessage(message) {
+      var chatBox = document.getElementById("chat-box");
+      var errorDiv = document.createElement("div");
+      errorDiv.className = "error";
+      errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+      chatBox.appendChild(errorDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function deleteMessages() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = '';
+      conversation = [];
+      sequence = 1;
+    }
+
+    function changeModel() {
+      selectedModel = document.getElementById('model-options').value;
+    }
+
+    function closeModal() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'none';
+    }
+
+    document.getElementById("user-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    window.onload = function() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'flex';
+    };
+  </script>
 </body>
 </html>
