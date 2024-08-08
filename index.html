@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -233,7 +234,7 @@
         <button id="delete-btn" onclick="deleteMessages()">Delete</button>
         <div id="model-selector">
           <select id="model-options" onchange="changeModel()">
-            <option value="llama-3.1-405b">llama-3.1-405b</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
           </select>
         </div>
       </div>
@@ -252,7 +253,7 @@
 
   <script>
     var conversation = [];
-    var selectedModel = "llama-3.1-405b";
+    var selectedModel = "gpt-4o-mini";
     var sequence = 1;
 
     function sendMessage() {
@@ -269,7 +270,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer sk-Dms2xgcZwfnD1Pa4095101B335Bb4266835006BeBbA2Fa3b",  
+          Authorization: "Bearer sk-o5j6BNj5bqYTyVBU22D3B234089e491eA3D62e564115AdDb",  
         },
         body: JSON.stringify({
           model: selectedModel,
@@ -279,7 +280,7 @@
           max_tokens: 160000,
         }),
       };    
-      fetch("https://provider-52b3df3d.24a.fun/v1/chat/completions", requestOptions)
+      fetch("https://aapi.swt-ai.com/v1/chat/completions", requestOptions)
         .then(response => {
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
