@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -233,7 +234,10 @@
         <button id="delete-btn" onclick="deleteMessages()">Delete</button>
         <div id="model-selector">
           <select id="model-options" onchange="changeModel()">
-            <option value="Baichuan3-Turbo">Baichuan3-Turbo</option>   
+            <option value="glm-4-0520">glm-4-0520</option>  
+            <option value="glm-4-air">glm-4-air</option>
+            <option value="glm-4-flash">glm-4-flash</option>  
+            <option value="glm-4">glm-4</option>
           </select>
         </div>
       </div>
@@ -252,7 +256,7 @@
 
   <script>
     var conversation = [];
-    var selectedModel = "Baichuan3-Turbo";
+    var selectedModel = "glm-4-0520";
     var sequence = 1;
 
     function sendMessage() {
@@ -269,7 +273,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer sk-cdf77e433fe76494224630ddb445eeaf",  
+          Authorization: "Bearer a885fff950a1ac8fa91678c117085d3e.iQELBz0pVW0FpuQn",  
         },
         body: JSON.stringify({
           model: selectedModel,
@@ -279,7 +283,7 @@
           max_tokens: 160000,
         }),
       };    
-      fetch("https://api.baichuan-ai.com/v1/chat/completions", requestOptions)
+      fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", requestOptions)
         .then(response => {
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
