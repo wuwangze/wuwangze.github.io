@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -234,10 +235,11 @@
         <button id="delete-btn" onclick="deleteMessages()">Delete</button>
         <div id="model-selector">
           <select id="model-options" onchange="changeModel()">
-            <option value="glm-4-0520">glm-4-0520</option>  
-            <option value="glm-4-air">glm-4-air</option>
-            <option value="glm-4-flash">glm-4-flash</option>  
-            <option value="glm-4">glm-4</option>
+            <option value="GLM-4-0520">GLM-4-0520</option>  
+            <option value="GLM-4-AllTools">GLM-4-AllTools</option>
+            <option value="GLM-4-Air">GLM-4-Air</option>   
+            <option value="GLM-4-Flash">GLM-4-Flash</option>
+            <option value="GLM-4">GLM-4</option> 
           </select>
         </div>
       </div>
@@ -256,7 +258,7 @@
 
   <script>
     var conversation = [];
-    var selectedModel = "glm-4-0520";
+    var selectedModel = "GLM-4-0520";
     var sequence = 1;
 
     function sendMessage() {
