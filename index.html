@@ -1,425 +1,343 @@
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WWZ-AI</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      background-color: #f4f4f9;
-    }
-    #header {
-      width: 100%;
-      padding: 20px;
-      text-align: center;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    #chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 98%;
-      background: #ffffff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-    #chat-box {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background-color: #f1f1f1;
-    }
-    .user, .bot {
-      display: flex;
-      align-items: flex-end;
-      position: relative;
-    }
-    .user {
-      justify-content: flex-end;
-    }
-    .bot {
-      justify-content: flex-start;
-    }
-    .message {
-      display: inline-block;
-      padding: 15px;
-      border-radius: 15px;
-      max-width: 60%;
-      word-break: break-word;
-      font-size: 16px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-    .bot .message {
-      background-color: #e0e0e0;
-      border-bottom-left-radius: 0;
-    }
-    .user .message {
-      background-color: #4CAF50;
-      color: white;
-      border-bottom-right-radius: 0;
-    }
-    .preview-button, .cancel-preview-button {
-      padding: 5px 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-    .preview-button:hover, .cancel-preview-button:hover {
-      background-color: #45a049;
-    }
-    .cancel-preview-button {
-      background-color: red;
-      margin-left: 10px;
-    }
-    .cancel-preview-button:hover {
-      background-color: darkred;
-    }
-    .preview-window {
-      margin-top: 10px;
-      width: 100%;
-      height: 500px; /* Increased height for better visibility */
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      overflow: auto;
-      background: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      position: relative;
-    }
-    .preview-window iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    #input-container {
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid #ccc;
-      padding: 15px;
-      background-color: #fff;
-      align-items: center;
-    }
-    #user-input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    .button-group {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-    }
-    button {
-      padding: 15px 20px;
-      border: none;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      flex: 1;
-      margin: 0 5px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #delete-btn {
-      background-color: red;
-      color: white;
-    }
-    #delete-btn:hover {
-      background-color: darkred;
-    }
-    #model-selector {
-      display: flex;
-      align-items: center;
-    }
-    #model-options {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      flex: 1;
-      margin: 0 5px;
-    }
-    #welcome-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    #welcome-message {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      max-width: 80%;
-    }
-    #welcome-message button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    #welcome-message button:hover {
-      background-color: #45a049;
-    }
-    @media (min-width: 600px) {
-      #input-container {
-        flex-direction: row;
-        align-items: center;
-      }
-      #user-input {
-        flex: 1;
-        margin-right: 10px;
-        margin-bottom: 0;
-      }
-      .button-group {
-        flex-direction: row;
-        width: auto;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吴旺泽的个人主页</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d0d;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* 动态粒子背景 */
+        .particle-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle-background .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: rgba(0, 240, 255, 0.7);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        .particle:nth-child(2) {
+            top: 10%;
+            left: 20%;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(3) {
+            top: 30%;
+            left: 50%;
+            animation-duration: 4s;
+        }
+
+        .particle:nth-child(4) {
+            top: 60%;
+            left: 80%;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(5) {
+            top: 90%;
+            left: 10%;
+            animation-duration: 5s;
+        }
+
+        .particle:nth-child(6) {
+            top: 25%;
+            left: 75%;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(7) {
+            top: 55%;
+            left: 35%;
+            animation-duration: 6s;
+        }
+
+        header {
+            background: linear-gradient(90deg, #1e1e1e, #4b4b4b);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #00f0ff;
+            text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+            }
+            to {
+                text-shadow: 0 0 30px #00f0ff, 0 0 60px #00f0ff;
+            }
+        }
+
+        nav {
+            background-color: #1a1a1a;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        nav a {
+            color: #00f0ff;
+            text-align: center;
+            padding: 15px 30px;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 300%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        nav a:hover::before {
+            left: 100%;
+        }
+        nav a:hover, nav a.active {
+            border: 2px solid #00f0ff;
+            box-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff;
+        }
+
+        .content {
+            padding: 60px;
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .content.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .section h2 {
+            color: #00f0ff;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00f0ff;
+            animation: neonText 2s infinite alternate;
+        }
+
+        @keyframes neonText {
+            from {
+                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+            }
+            to {
+                text-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+            }
+        }
+
+        .section p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #ccc;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            animation: fadeInUp 1s forwards;
+        }
+
+        .content.active .section p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section p::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.7) 0%, rgba(0, 240, 255, 0.3) 100%);
+            margin-bottom: 20px;
+            animation: gradientMove 2s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        .section img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .content.active .section img {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 36px;
+            }
+            nav a {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .section h2 {
+                font-size: 28px;
+            }
+            .section p {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div id="header">WUWANGZE-AI</div>
-  <div id="chat-container">
-    <div id="chat-box"></div>
-    <div id="input-container">
-      <input type="text" id="user-input" placeholder="Type a message">
-      <div class="button-group">
-        <button onclick="sendMessage()">Send</button>
-        <button id="delete-btn" onclick="deleteMessages()">Delete</button>
-        <div id="model-selector">
-          <select id="model-options" onchange="changeModel()">
-            <option value="GLM-4-0520">GLM-4-0520</option>  
-            <option value="GLM-4-AllTools">GLM-4-AllTools</option>
-            <option value="GLM-4-Air">GLM-4-Air</option>   
-            <option value="GLM-4-Flash">GLM-4-Flash</option>
-            <option value="GLM-4">GLM-4</option> 
-          </select>
+
+    <header>
+        <h1>欢迎来到这里</h1>
+    </header>
+
+    <nav>
+        <a href="#about" class="active">个人简介</a>
+        <a href="#contact">联系方式</a>
+        <a href="#other">重要内容</a> 
+    </nav>
+
+    <div id="about-content" class="content active">
+        <div class="section">
+            <h2>个人简介</h2>
+            <p>我是吴旺泽，a boy，是嘉县一中高一学生。</p>
         </div>
-      </div>
     </div>
-  </div>
 
-  <div id="welcome-modal">
-    <div id="welcome-message">
-      <p>该网站为AI问答网站，可以向AI提问，AI会耐心进行解答，可以和AI聊天</p>
-      <p>欢迎进入官方QQ交流群：992310237<br>您的进群便是对我最大的支持</p>
-      <p>支持HTML代码在线预览，flash为回答最快速的模型</p>
-      <p>PS：如遇到长时间不回复，请重试</p>
-      <button onclick="closeModal()">确认</button>
+    <div id="contact-content" class="content">
+        <div class="section">
+            <h2>联系方式</h2>
+            <p>QQ：3334094689</p>
+            <p>微信：SweetDream400</p>
+        </div>
     </div>
-  </div>
 
-  <script>
-    var conversation = [];
-    var selectedModel = "GLM-4-0520";
-    var sequence = 1;
+    <div id="other-content" class="content">
+        <div class="section">
+            <h2>重要内容</h2>
+            <p>微信扫码，体验更佳</p>
+            <img src="https://i.ibb.co/yfChktJ/20240907171310.jpg" alt="图片">
+        </div>
+    </div>
 
-    function sendMessage() {
-      var userInput = document.getElementById("user-input").value.trim();
-      if (userInput === '') return;
-      appendMessage("You", userInput);
-      conversation.push({
-        role: "user",
-        content: userInput,
-        sequence: sequence,
-      });
-      sequence++;
-      var requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer 661eae6de559a444724beae731df079d.c7VrxDG4yUthpasV",  
-        },
-        body: JSON.stringify({
-          model: selectedModel,
-          messages: conversation,
-          stream: true,
-          temperature: 0.5,
-          max_tokens: 160000,
-        }),
-      };    
-      fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", requestOptions)
-        .then(response => {
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let botResponse = '';
-          appendMessage("AI", ""); 
-          function read() {
-            reader.read().then(({ done, value }) => {
-              if (done) {
-                conversation.push({
-                  role: "assistant",
-                  content: botResponse,
-                });
-                return;
-              }
-              const chunk = decoder.decode(value, { stream: true });
-              const lines = chunk.split('\n');
-              for (let line of lines) {
-                if (line.trim().startsWith('data: ')) {
-                  const json = JSON.parse(line.slice(6));
-                  if (json.choices && json.choices.length > 0 && json.choices[0].delta && json.choices[0].delta.content) {
-                    botResponse += json.choices[0].delta.content;
-                    updateLatestMessage(botResponse);
-                  }
-                }
-              }
-              read();
+    <footer>
+        &copy; 2024 吴旺泽 | 个人主页
+    </footer>
+
+    <div class="particle-background">
+        <div class="particle" style="top: 10%; left: 20%;"></div>
+        <div class="particle" style="top: 30%; left: 50%;"></div>
+        <div class="particle" style="top: 60%; left: 80%;"></div>
+        <div class="particle" style="top: 90%; left: 10%;"></div>
+        <div class="particle" style="top: 25%; left: 75%;"></div>
+        <div class="particle" style="top: 55%; left: 35%;"></div>
+    </div>
+
+    <script>
+        const navLinks = document.querySelectorAll('nav a');
+        const contents = document.querySelectorAll('.content');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = e.target.getAttribute('href').substring(1);
+                const targetContent = document.getElementById(targetId + '-content');
+
+                navLinks.forEach(link => link.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+
+                e.target.classList.add('active');
+                targetContent.classList.add('active');
             });
-          }
-          read();
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          appendErrorMessage("Error: " + error);
         });
-      document.getElementById("user-input").value = "";
-    }
+    </script>
 
-    function updateLatestMessage(text) {
-      var chatBox = document.getElementById("chat-box");
-      var latestMessage = chatBox.querySelector(".bot:last-child .message");
-      if (latestMessage) {
-        latestMessage.innerHTML = marked.parse(text);
-        addPreviewButton(latestMessage, text);
-      }
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function appendMessage(sender, message) {
-      var chatBox = document.getElementById("chat-box");
-      var messageDiv = document.createElement("div");
-      messageDiv.className = sender === "You" ? "user" : "bot";
-      var messageContent = `<div class="message">${sender === "You" ? message : marked.parse(message)}</div>`;
-      messageDiv.innerHTML = messageContent;
-      chatBox.appendChild(messageDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function addPreviewButton(messageElement, text) {
-      var previewButton = document.createElement("button");
-      previewButton.className = "preview-button";
-      previewButton.innerText = "Preview";
-      previewButton.onclick = function() {
-        openPreviewWindow(messageElement, text);
-      };
-      messageElement.appendChild(previewButton);
-
-      var cancelPreviewButton = document.createElement("button");
-      cancelPreviewButton.className = "cancel-preview-button";
-      cancelPreviewButton.innerText = "Cancel Preview";
-      cancelPreviewButton.onclick = function() {
-        closePreviewWindow(messageElement);
-      };
-      messageElement.appendChild(cancelPreviewButton);
-    }
-
-    function openPreviewWindow(messageElement, text) {
-      var previewWindow = document.createElement("div");
-      previewWindow.className = "preview-window";
-      
-      // 只提取代码块部分
-      var codeBlockMatch = text.match(/```html\s*([\s\S]*?)\s*```/);
-      var codeContent = codeBlockMatch ? codeBlockMatch[1] : '';
-      
-      // Ensure text is properly escaped
-      var escapedText = codeContent.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-      
-      // Create iframe and set srcdoc property
-      previewWindow.innerHTML = `<iframe srcdoc="${escapedText}"></iframe>`;
-      messageElement.appendChild(previewWindow);
-    }
-
-    function closePreviewWindow(messageElement) {
-      var previewWindow = messageElement.querySelector(".preview-window");
-      if (previewWindow) {
-        messageElement.removeChild(previewWindow);
-      }
-    }
-
-    function appendErrorMessage(message) {
-      var chatBox = document.getElementById("chat-box");
-      var errorDiv = document.createElement("div");
-      errorDiv.className = "error";
-      errorDiv.innerHTML = "<strong>Error:</strong> " + message;
-      chatBox.appendChild(errorDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function deleteMessages() {
-      var chatBox = document.getElementById("chat-box");
-      chatBox.innerHTML = '';
-      conversation = [];
-      sequence = 1;
-    }
-
-    function changeModel() {
-      selectedModel = document.getElementById('model-options').value;
-    }
-
-    function closeModal() {
-      var modal = document.getElementById('welcome-modal');
-      modal.style.display = 'none';
-    }
-
-    document.getElementById("user-input").addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendMessage();
-      }
-    });
-
-    window.onload = function() {
-      var modal = document.getElementById('welcome-modal');
-      modal.style.display = 'flex';
-    };
-  </script>
 </body>
 </html>
