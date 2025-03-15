@@ -1,364 +1,707 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>吴旺泽的小空间</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0d0d0d;
-            color: #fff;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
-
-        /* 动态粒子背景 */
-        .particle-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .particle-background .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: rgba(0, 240, 255, 0.7);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-            }
-            50% {
-                transform: translateY(-100px) translateX(50px);
-            }
-            100% {
-                transform: translateY(0) translateX(0);
-            }
-        }
-
-        .particle:nth-child(2) {
-            top: 10%;
-            left: 20%;
-            animation-duration: 7s;
-        }
-
-        .particle:nth-child(3) {
-            top: 30%;
-            left: 50%;
-            animation-duration: 4s;
-        }
-
-        .particle:nth-child(4) {
-            top: 60%;
-            left: 80%;
-            animation-duration: 8s;
-        }
-
-        .particle:nth-child(5) {
-            top: 90%;
-            left: 10%;
-            animation-duration: 5s;
-        }
-
-        .particle:nth-child(6) {
-            top: 25%;
-            left: 75%;
-            animation-duration: 9s;
-        }
-
-        .particle:nth-child(7) {
-            top: 55%;
-            left: 35%;
-            animation-duration: 6s;
-        }
-
-        header {
-            background: linear-gradient(90deg, #1e1e1e, #4b4b4b);
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 48px;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: #00f0ff;
-            text-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-            }
-            to {
-                text-shadow: 0 0 30px #00f0ff, 0 0 60px #00f0ff;
-            }
-        }
-
-        nav {
-            background-color: #1a1a1a;
-            padding: 10px 0;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        nav a {
-            color: #00f0ff;
-            text-align: center;
-            padding: 15px 30px;
-            margin: 0 15px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 500;
-            text-transform: uppercase;
-            border: 2px solid transparent;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-        nav a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 300%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
-            transition: all 0.5s ease;
-            z-index: -1;
-        }
-        nav a:hover::before {
-            left: 100%;
-        }
-        nav a:hover, nav a.active {
-            border: 2px solid #00f0ff;
-            box-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff;
-        }
-
-        .content {
-            padding: 60px;
-            max-width: 900px;
-            margin: 40px auto;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            display: none;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .content.active {
-            display: block;
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .section h2 {
-            color: #00f0ff;
-            font-size: 36px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #00f0ff;
-            animation: neonText 2s infinite alternate;
-        }
-
-        @keyframes neonText {
-            from {
-                text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-            }
-            to {
-                text-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff;
-            }
-        }
-
-        .section p {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #ccc;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            animation: fadeInUp 1s forwards;
-        }
-
-        .content.active .section p {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section p::before {
-            content: '';
-            display: block;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, rgba(0, 240, 255, 0.7) 0%, rgba(0, 240, 255, 0.3) 100%);
-            margin-bottom: 20px;
-            animation: gradientMove 2s linear infinite;
-        }
-
-        @keyframes gradientMove {
-            0% {
-                background-position: 0 0;
-            }
-            100% {
-                background-position: 100% 100%;
-            }
-        }
-
-        .section img {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-            margin-top: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .content.active .section img {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #1a1a1a;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 36px;
-            }
-            nav a {
-                font-size: 16px;
-                padding: 10px 20px;
-            }
-            .content {
-                padding: 20px;
-            }
-            .section h2 {
-                font-size: 28px;
-            }
-            .section p {
-                font-size: 16px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>吴旺泽的小空间</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Arial', sans-serif; line-height: 1.6; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+    
+    /* 导航栏 */
+    header {
+      position: fixed;
+      width: 100%;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { font-size: 1.8rem; letter-spacing: 1px; }
+    nav ul { list-style: none; display: flex; }
+    nav ul li { margin-left: 20px; }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover { color: #1abc9c; }
+    
+    /* 首页动画背景 - 科技感粒子动画 */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .hero-content h2 { font-size: 3rem; margin-bottom: 10px; }
+    .hero-content p { font-size: 1.3rem; margin-bottom: 20px; }
+    .hero-content a {
+      padding: 10px 20px;
+      background: #1abc9c;
+      color: #0a0a0a;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .hero-content a:hover { background: #16a085; transform: scale(1.05); }
+    
+    /* 各区块通用样式 */
+    section { padding: 80px 20px; max-width: 1200px; margin: auto; }
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.2rem;
+      position: relative;
+    }
+    .section-title::after {
+      content: "";
+      width: 60px;
+      height: 3px;
+      background: #1abc9c;
+      display: block;
+      margin: 10px auto 0;
+    }
+    
+    /* 关于我 */
+    .about { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-around; }
+    .about img {
+      max-width: 300px;
+      /* 去掉圆角：完整展示图片 */
+      border-radius: 0;
+      margin: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .about img:hover { transform: scale(1.05); box-shadow: 0 0 20px #1abc9c; }
+    .about-text { flex: 1; min-width: 300px; margin: 20px; font-size: 1.1rem; }
+    
+    /* 生活技能展示 */
+    .skills { display: flex; flex-wrap: wrap; justify-content: space-around; }
+    .skill-item {
+      background: #111;
+      padding: 20px;
+      margin: 10px;
+      /* 去掉圆角 */
+      border-radius: 0;
+      flex: 1 1 250px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .skill-item:hover { transform: translateY(-8px) scale(1.02); }
+    .skill-item h3 { margin-bottom: 10px; }
+    .progress {
+      background: #333;
+      border-radius: 0;
+      overflow: hidden;
+      height: 10px;
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #1abc9c;
+      width: 0;
+      animation: progressAnimation 2s forwards;
+    }
+    @keyframes progressAnimation {
+      to { width: 90%; }
+    }
+    
+    /* 优化后的作品展示 */
+    .portfolio-filters {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .portfolio-filters button {
+      background: #111;
+      border: 1px solid #1abc9c;
+      color: #fff;
+      padding: 8px 16px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border-radius: 0;
+    }
+    .portfolio-filters button:hover {
+      background: #1abc9c;
+      transform: scale(1.05);
+    }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .portfolio-item {
+      position: relative;
+      overflow: hidden;
+      /* 去掉圆角 */
+      border-radius: 0;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .portfolio-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(26, 188, 156, 0.7);
+    }
+    .portfolio-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .portfolio-item:hover img {
+      transform: scale(1.1);
+    }
+    .portfolio-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+    }
+    .portfolio-item:hover .portfolio-overlay {
+      opacity: 1;
+    }
+    
+    /* 个人照片合辑 */
+    #photoAlbum {
+      margin-top: 40px;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+    .photo-grid img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .photo-grid img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Lightbox 模态窗口样式 */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+    }
+    .lightbox-content {
+      margin: auto;
+      display: block;
+      max-width: 80%;
+      max-height: 80%;
+    }
+    .caption {
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .close:hover { color: #bbb; }
+    
+    /* 倒计时组件 */
+    .countdown {
+      text-align: center;
+      font-size: 1.8rem;
+      margin: 20px 0;
+      padding: 15px;
+      background: #111;
+      border-radius: 0;
+      transition: transform 0.3s;
+    }
+    .countdown:hover { transform: scale(1.05); }
+    
+    /* 个人格言 */
+    .personal-motto {
+      text-align: center;
+      font-style: italic;
+      margin: 20px 0;
+      padding: 15px;
+      background: #222;
+      border-radius: 0;
+      font-size: 1.3rem;
+    }
+    
+    /* 社交媒体链接 */
+    .social-links {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .social-links a {
+      margin: 0 10px;
+      color: #fff;
+      font-size: 1.5rem;
+      text-decoration: none;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .social-links a:hover { color: #1abc9c; transform: scale(1.1); }
+    
+    /* 个人成长时间轴 */
+    .timeline {
+      position: relative;
+      margin: 40px 0;
+      padding: 20px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #1abc9c;
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      position: relative;
+      width: 45%;
+      padding: 20px;
+      background: #111;
+      border-radius: 0;
+      margin: 20px 0;
+      transition: transform 0.3s;
+    }
+    .timeline-item:hover { transform: scale(1.03); }
+    .timeline-item:nth-child(odd) { left: 0; }
+    .timeline-item:nth-child(even) { left: 55%; }
+    
+    /* 生活之声 - 音乐播放器模块 */
+    .music-section {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .music-player audio { width: 100%; max-width: 400px; }
+    
+    /* 页脚 */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #000;
+    }
+    
+    /* 隐藏验证按钮，放在右下角，不影响整体美观 */
+    #verifyBtn {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(26,188,156,0.7);
+      border: none;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 5000;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .about { flex-direction: column; }
+      .timeline-item { width: 90%; left: 5% !important; }
+    }
+  </style>
 </head>
 <body>
-
-    <header>
-        <h1>欢迎来到这里</h1>
-    </header>
-
+  <!-- 导航栏 -->
+  <header>
+    <h1>WU WANGZE</h1>
     <nav>
-                <a href="#about" class="active">个人简介</a>
-        <a href="#contact">联系方式</a>
-        <a href="#other">重要内容</a>
-        <a href="#websites">我的所有网站</a> <!-- 新增的导航项 -->
+      <ul>
+        <li><a href="#hero">首页</a></li>
+        <li><a href="#about">关于我</a></li>
+        <li><a href="#skills">至理名言</a></li>
+        <li><a href="#portfolio">作品展示</a></li>
+        <li><a href="#photoAlbum">个人照片合辑</a></li>
+        <li><a href="#extras">更多</a></li>
+        <li><a href="#contact">联系</a></li>
+      </ul>
     </nav>
-
-    <div id="about-content" class="content active">
-        <div class="section">
-            <h2>个人简介</h2>
-            <p>我是吴旺泽，a boy，是嘉祥一中高一学生。</p>
+  </header>
+  
+  <!-- 首页 - 科技感粒子动画背景 -->
+  <section class="hero" id="hero">
+    <canvas id="particle-canvas"></canvas>
+    <div class="hero-content">
+      <h2>欢迎来到我的世界</h2>
+      <p>探索科技与生活的交汇</p>
+      <a href="#about">了解更多</a>
+    </div>
+  </section>
+  
+  <!-- 关于我 -->
+  <section id="about">
+    <h2 class="section-title">关于我</h2>
+    <div class="about">
+      <!-- 在此处替换为你的个人照片 URL -->
+      <img class="protected-img" src="" data-src="https://i.ibb.co/B2ztt8bL/3.jpg" alt="个人照片">
+      <div class="about-text">
+        <p>你好，我是一名高中生，男生，很帅很可爱！热爱生活的每个细节，从音乐、摄影到旅行，我追寻那份独特的孤傲与自由。</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 生活技能展示 -->
+  <section id="skills">
+    <h2 class="section-title">至理名言</h2>
+    <div class="skills">
+      <div class="skill-item">
+        <h3>恭喜你啊同学，被我恭喜到了啊</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 90%;"></div>
         </div>
-    </div>
-
-    <div id="contact-content" class="content">
-        <div class="section">
-            <h2>联系方式</h2>
-            <p>QQ：3334094689</p>
-            <p>微信：SweetDream400</p>
+        <p>答应我啊，吃饭要用嘴，走路要用腿。</p>
+      </div>
+      <div class="skill-item">
+        <h3>你努力不一定会有结果</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 85%;"></div>
         </div>
-    </div>
-
-    <div id="other-content" class="content">
-        <div class="section">
-            <h2>重要内容</h2>
-            <p>微信扫码，体验更佳</p>
-            <img src="https://i.ibb.co/yfChktJ/20240907171310.jpg" alt="图片">
+        <p>但没结果一定是没结果啊</p>
+      </div>
+      <div class="skill-item">
+        <h3>欸你看，每个成功男人背后不一定都有一个女人</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 80%;"></div>
         </div>
-    </div>
-
-    <!-- 新增的内容板块 -->
-    <div id="websites-content" class="content">
-        <div class="section">
-            <h2>我的所有网站</h2>
-            <p>
-                <a href="https://wuwangze.github.io/" target="_blank" style="color: #00f0ff;">https://wuwangze.github.io/</a><br>
-                <a href="https://baobaowangze.github.io/" target="_blank" style="color: #00f0ff;">https://baobaowangze.github.io/</a><br>
-                <a href="https://saikesw.github.io/" target="_blank" style="color: #00f0ff;">https://saikesw.github.io/</a><br>
-                <a href="https://meetyouhere.github.io/" target="_blank" style="color: #00f0ff;">https://meetyouhere.github.io/</a><br>
-                <a href="https://silentecho520.github.io/" target="_blank" style="color: #00f0ff;">https://silentecho520.github.io/</a><br>
-                <a href="https://mihoyo520.github.io/" target="_blank" style="color: #00f0ff;">https://mihoyo520.github.io/</a><br>
-                <a href="https://i-love-you-521.github.io/" target="_blank" style="color: #00f0ff;">https://i-love-you-521.github.io/</a><br>
-                <a href="https://jiaxiangxiandiyizhongxue.github.io/" target="_blank" style="color: #00f0ff;">https://jiaxiangxiandiyizhongxue.github.io/</a><br>
-                <a href="https://110cn.github.io/" target="_blank" style="color: #00f0ff;">https://110cn.github.io/</a><br>
-                <a href="https://91plus.github.io/" target="_blank" style="color: #00f0ff;">https://91plus.github.io/</a>
-            </p>
+        <p>但一定会有一条脊椎</p>
+      </div>
+      <div class="skill-item">
+        <h3>朋友就像雪花一样</h3>
+        <div class="progress">
+          <div class="progress-bar" style="width: 75%;"></div>
         </div>
+        <p>你对他尿尿，他就会消失</p>
+      </div>
     </div>
-
-    <footer>
-        &copy; 2024 吴旺泽 | 个人主页
-    </footer>
-
-    <div class="particle-background">
-        <div class="particle" style="top: 10%; left: 20%;"></div>
-        <div class="particle" style="top: 30%; left: 50%;"></div>
-        <div class="particle" style="top: 60%; left: 80%;"></div>
-        <div class="particle" style="top: 90%; left: 10%;"></div>
-        <div class="particle" style="top: 25%; left: 75%;"></div>
-        <div class="particle" style="top: 55%; left: 35%;"></div>
+  </section>
+  
+  <!-- 优化后的作品展示 -->
+  <section id="portfolio">
+    <h2 class="section-title">图片展示</h2>
+    
+    <!-- 分类按钮 -->
+    <div class="portfolio-filters">
+      <button class="filter-btn" data-category="all">全部</button>
+      <button class="filter-btn" data-category="photography">1</button>
+      <button class="filter-btn" data-category="travel">2</button>
+      <button class="filter-btn" data-category="food">3</button>
     </div>
-
-    <script>
-        const navLinks = document.querySelectorAll('nav a');
-        const contents = document.querySelectorAll('.content');
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = e.target.getAttribute('href').substring(1);
-                const targetContent = document.getElementById(targetId + '-content');
-
-                navLinks.forEach(link => link.classList.remove('active'));
-                contents.forEach(content => content.classList.remove('active'));
-
-                e.target.classList.add('active');
-                targetContent.classList.add('active');
-            });
+    
+    <!-- 作品网格 -->
+    <div class="portfolio-grid">
+      <div class="portfolio-item" data-category="photography">
+        <!-- 替换图片 URL 为你的作品图片 -->
+        <img class="protected-img" src="" data-src="https://i.ibb.co/dsLF0kjw/image.png" alt="1" loading="lazy">
+        <div class="portfolio-overlay">
+          <p>AI女友路小鱼</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="travel">
+        <img class="protected-img" src="" data-src="https://i.ibb.co/CpB4PHrR/image.png" alt="2" loading="lazy">
+        <div class="portfolio-overlay">
+          <p>音乐网站</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="photography">
+        <img class="protected-img" src="" data-src="https://i.ibb.co/svdBzp96/image.png" alt="3" loading="lazy">
+        <div class="portfolio-overlay">
+          <p>你懂的</p>
+        </div>
+      </div>
+      <div class="portfolio-item" data-category="food">
+        <img class="protected-img" src="" data-src="https://i.ibb.co/k2b3qgyQ/image.png" alt="4" loading="lazy">
+        <div class="portfolio-overlay">
+          <p>视频解析器</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 个人照片合辑 -->
+  <section id="photoAlbum">
+    <h2 class="section-title">个人照片合辑</h2>
+    <div class="photo-grid">
+      <!-- 替换图片 URL 为你的合辑图片 -->
+      <img class="protected-img" src="" data-src="https://i.ibb.co/B2ztt8bL/3.jpg" alt="美照1" loading="lazy">
+      <img class="protected-img" src="" data-src="https://i.ibb.co/N2tCRwRy/2.jpg" alt="美照2" loading="lazy">
+      <img class="protected-img" src="" data-src="https://i.ibb.co/Xx3ynv2J/4.jpg" alt="美照3" loading="lazy">
+      <img class="protected-img" src="" data-src="https://i.ibb.co/N2tCRwRy/2.jpg" alt="美照4" loading="lazy">
+    </div>
+  </section>
+  
+  <!-- Lightbox 模态窗口 -->
+  <div id="lightbox" class="lightbox">
+    <span class="close">&times;</span>
+    <img class="lightbox-content" id="lightbox-img">
+    <div class="caption" id="lightbox-caption"></div>
+  </div>
+  
+  <!-- 更多组件区域 -->
+  <section id="extras">
+    <h2 class="section-title">更多组件</h2>
+    
+    <!-- 1. 时钟小组件 -->
+    <div class="clock" id="clock">00:00:00</div>
+    
+    <!-- 2. 倒计时组件 -->
+    <div class="countdown" id="countdown">
+      距离我的生日还有：<span id="days">0</span>天 <span id="hours">0</span>小时 <span id="minutes">0</span>分 <span id="seconds">0</span>秒
+    </div>
+    
+    <!-- 3. 个人格言 -->
+    <div class="personal-motto" id="personalMotto">
+      "霞光跌入海的怀抱，浪花悸动着温柔的心跳。"
+    </div>
+    
+    <!-- 4. 社交媒体链接 -->
+    <div class="social-links">
+      <!-- 在 href 中替换为你的社交媒体链接 -->
+      <a href="#" target="_blank">微博</a>
+      <a href="#" target="_blank">微信</a>
+      <a href="#" target="_blank">GitHub</a>
+      <a href="#" target="_blank">Instagram</a>
+    </div>
+    
+    <!-- 5. 个人成长时间轴 -->
+    <div class="timeline">
+      <div class="timeline-item">
+        <h3>2009年</h3>
+        <p>2009年，降生于这个世界，开始这个世界的探索</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2021年</h3>
+        <p>2021年，进入初中，一切安好</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2023年</h3>
+        <p>初三开始，百日誓师，一切过得都很快</p>
+      </div>
+      <div class="timeline-item">
+        <h3>2024年</h3>
+        <p>步入高一，遇见她</p>
+      </div>
+    </div>
+    
+    <!-- 6. 生活之声 - 音乐播放器模块 -->
+    <div class="music-section">
+      <h2 class="section-title">生活之声</h2>
+      <div class="music-player">
+        <audio controls>
+          <!-- 在此处替换为你的音乐音频 URL -->
+          <source src="https://raw.githubusercontent.com/wuwangze/GithubActionSample/refs/heads/main/T.R.Y%20-%20%E4%B8%8D%E6%98%AF%E5%9B%A0%E4%B8%BA%E5%AF%82%E5%AF%9E%E6%89%8D%E6%83%B3%E4%BD%A0.mp3" type="audio/mpeg">
+          您的浏览器不支持音频播放。
+        </audio>
+      </div>
+    </div>
+    
+  </section>
+  
+  <!-- 联系方式 -->
+  <section id="contact">
+    <h2 class="section-title">联系我</h2>
+    <div class="contact" style="text-align: center;">
+      <!-- 静态联系方式 -->
+      <p>Email: wuwangze123@gmail.com</p>
+      <p>QQ: 3334094689</p
+    </div>
+  </section>
+  
+  <!-- 页脚 -->
+  <footer>
+    <p>&copy; 2025 我的个人主页. 保留所有权利.</p>
+  </footer>
+  
+  <!-- 不显眼的验证按钮 -->
+  <button id="verifyBtn">获取图片权限</button>
+  
+  <!-- 脚本部分 -->
+  <script>
+    // 验证按钮功能：点击后提示输入密码，正确则加载所有受保护的图片
+    document.getElementById('verifyBtn').addEventListener('click', function(){
+      var pwd = prompt("请输入查看照片的密码：");
+      // 示例密码为 "wuwangze123"，请根据需要修改
+      if(pwd === "wuwangze123") {
+        alert("验证成功，正在加载照片！");
+        // 遍历所有带有 protected-img 类的图片，设置 src 属性为 data-src
+        document.querySelectorAll('.protected-img').forEach(function(img) {
+          img.src = img.getAttribute('data-src');
         });
-    </script>
-
+        // 隐藏验证按钮（或禁用）
+        document.getElementById('verifyBtn').style.display = "none";
+      } else {
+        alert("密码错误，无法加载照片！");
+      }
+    });
+    
+    // 粒子动画效果（canvas）
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    const numberOfParticles = 120;
+    
+    function setCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
+    
+    class Particle {
+      constructor(){
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        this.color = "rgba(26, 188, 156, 0.8)";
+      }
+      update(){
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+        if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+      }
+      draw(){
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    function initParticles(){
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++){
+        particlesArray.push(new Particle());
+      }
+    }
+    
+    function animateParticles(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    
+    initParticles();
+    animateParticles();
+    
+    // 时钟组件
+    function updateClock(){
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    
+    // 倒计时组件 - 倒计时你的生日（示例目标日期为2025-04-08，请根据实际换算调整）
+    const targetDate = new Date("2025-04-08T00:00:00");
+    function updateCountdown(){
+      const now = new Date();
+      const diff = targetDate - now;
+      if(diff < 0) {
+        document.getElementById('countdown').innerHTML = "生日已到！";
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById('countdown').innerHTML = 
+        `距离我的生日还有：<span id="days">${days}</span>天 <span id="hours">${hours}</span>小时 <span id="minutes">${minutes}</span>分 <span id="seconds">${seconds}</span>秒`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+    
+    // 作品展示筛选功能
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        portfolioItems.forEach(item => {
+          if(category === 'all' || item.getAttribute('data-category') === category){
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Lightbox 功能
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = document.querySelector('.lightbox .close');
+    
+    portfolioItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        const captionText = item.querySelector('.portfolio-overlay').innerHTML;
+        lightbox.style.display = 'block';
+        lightboxImg.src = img.src;
+        lightboxCaption.innerHTML = captionText;
+      });
+    });
+    
+    closeBtn.addEventListener('click', () => {
+      lightbox.style.display = 'none';
+    });
+    
+    // 点击空白区域关闭 lightbox
+    lightbox.addEventListener('click', (e) => {
+      if(e.target === lightbox) {
+        lightbox.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
-
